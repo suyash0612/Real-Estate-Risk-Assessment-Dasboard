@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Midwest RE Investor Risk Platform</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --color-text-primary:#1a1a1a;
+  --color-text-secondary:#4a4a4a;
+  --color-text-tertiary:#888;
+  --color-background-primary:#fff;
+  --color-background-secondary:#f5f5f3;
+  --color-background-info:#e6f1fb;
+  --color-background-warning:#faeeda;
+  --color-background-danger:#fcebeb;
+  --color-background-success:#eaf3de;
+  --color-border-tertiary:rgba(0,0,0,0.12);
+  --color-border-secondary:rgba(0,0,0,0.2);
+  --color-border-primary:rgba(0,0,0,0.3);
+  --color-border-info:#85b7eb;
+  --color-border-warning:#ef9f27;
+  --color-border-danger:#f09595;
+  --color-text-info:#185fa5;
+  --color-text-warning:#854f0b;
+  --color-text-danger:#a32d2d;
+  --color-text-success:#3b6d11;
+  --border-radius-md:8px;
+  --border-radius-lg:12px;
+  --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-mono:'SF Mono','Fira Code',monospace;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --color-text-primary:#f0efe9;
+    --color-text-secondary:#b0aea6;
+    --color-text-tertiary:#6e6d68;
+    --color-background-primary:#1e1e1c;
+    --color-background-secondary:#2a2a28;
+    --color-background-info:#042c53;
+    --color-background-warning:#412402;
+    --color-background-danger:#501313;
+    --color-background-success:#173404;
+    --color-border-tertiary:rgba(255,255,255,0.1);
+    --color-border-secondary:rgba(255,255,255,0.18);
+    --color-border-primary:rgba(255,255,255,0.28);
+    --color-border-info:#378add;
+    --color-border-warning:#ba7517;
+    --color-border-danger:#e24b4a;
+    --color-text-info:#85b7eb;
+    --color-text-warning:#fac775;
+    --color-text-danger:#f09595;
+    --color-text-success:#c0dd97;
+  }
+}
+body{font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-background-secondary);min-height:100vh}
+:root{--nav-w:220px}
+.shell{display:flex;min-height:100vh}
+.nav{width:var(--nav-w);flex-shrink:0;padding:1.25rem 0;border-right:0.5px solid var(--color-border-tertiary);position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--color-background-primary)}
+.nav-title{font-size:11px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.08em;text-transform:uppercase;padding:0 1rem 0.75rem}
+.nav a{display:block;padding:6px 1rem;font-size:13px;color:var(--color-text-secondary);text-decoration:none;border-left:2px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav a:hover{color:var(--color-text-primary);background:var(--color-background-secondary)}
+.nav a.active{color:var(--color-text-primary);border-left-color:var(--color-border-info);background:var(--color-background-info)}
+.nav-group{margin-bottom:0.5rem}
+.nav-group-label{font-size:10px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.07em;text-transform:uppercase;padding:0.75rem 1rem 0.25rem}
+.main{flex:1;min-width:0;padding:2rem 2.5rem;max-width:960px;background:var(--color-background-secondary)}
+.section{display:none}
+.section.active{display:block}
+h1{font-size:22px;font-weight:500;margin-bottom:0.5rem;color:var(--color-text-primary)}
+h2{font-size:18px;font-weight:500;margin:1.75rem 0 0.75rem;color:var(--color-text-primary)}
+h3{font-size:15px;font-weight:500;margin:1.25rem 0 0.5rem;color:var(--color-text-primary)}
+p{font-size:14px;line-height:1.7;color:var(--color-text-secondary);margin-bottom:0.75rem}
+.tag{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:var(--border-radius-md);margin:2px}
+.tag-blue{background:var(--color-background-info);color:var(--color-text-info)}
+.tag-amber{background:var(--color-background-warning);color:var(--color-text-warning)}
+.tag-red{background:var(--color-background-danger);color:var(--color-text-danger)}
+.tag-green{background:var(--color-background-success);color:var(--color-text-success)}
+.tag-gray{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem}
+.card-grid{display:grid;gap:12px}
+.card-grid-2{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card-grid-3{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.metric-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;text-align:center}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.metric-value{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.metric-sub{font-size:11px;color:var(--color-text-tertiary);margin-top:2px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:0.75rem 0}
+th{text-align:left;padding:8px 10px;font-weight:500;border-bottom:0.5px solid var(--color-border-primary);color:var(--color-text-secondary);font-size:12px}
+td{padding:7px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 6px;border-radius:4px}
+.badge-high{background:#FCEBEB;color:#A32D2D}
+.badge-med{background:#FAEEDA;color:#854F0B}
+.badge-low{background:#EAF3DE;color:#3B6D11}
+.badge-crit{background:#FAECE7;color:#993C1D}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.5rem 0}
+ul{padding-left:1.25rem;margin-bottom:0.75rem}
+li{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:2px}
+.callout{border-left:3px solid var(--color-border-info);padding:0.75rem 1rem;margin:1rem 0;background:var(--color-background-info);border-radius:0 var(--border-radius-md) var(--border-radius-md) 0}
+.callout-warn{border-left-color:var(--color-border-warning);background:var(--color-background-warning)}
+.callout-danger{border-left-color:var(--color-border-danger);background:var(--color-background-danger)}
+.callout p{margin:0;font-size:13px;color:var(--color-text-secondary)}
+.formula{font-family:var(--font-mono);font-size:12px;background:var(--color-background-secondary);padding:0.75rem 1rem;border-radius:var(--border-radius-md);margin:0.5rem 0;color:var(--color-text-primary);line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}.nav{position:fixed;left:-220px;z-index:100;transition:left .25s}.nav.open{left:0}.main{padding:1rem}.mobile-toggle{display:flex}}
+.risk-category{border-left:3px solid transparent;padding-left:10px;margin-bottom:1rem}
+.rc-market{border-color:#378ADD}
+.rc-asset{border-color:#EF9F27}
+.rc-finance{border-color:#E24B4A}
+.rc-ops{border-color:#639922}
+.rc-regulatory{border-color:#7F77DD}
+.rc-climate{border-color:#1D9E75}
+.rc-liquidity{border-color:#D85A30}
+.persona-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem}
+.persona-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:14px;margin-bottom:0.75rem}
+.roadmap-phase{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem;background:var(--color-background-primary)}
+.phase-header{font-size:13px;font-weight:500;margin-bottom:0.75rem}
+.phase-mvp .phase-header{color:#185FA5}
+.phase-v2 .phase-header{color:#3B6D11}
+.phase-v3 .phase-header{color:#7F77DD}
+.module-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem;margin-bottom:0.75rem}
+.module-title{font-size:14px;font-weight:500;margin-bottom:0.5rem}
+.module-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:0.5rem}
+.hypothesis-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:0.75rem 1rem;margin-bottom:0.75rem;background:var(--color-background-primary)}
+.hyp-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.hyp-body{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.section-intro{font-size:15px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:1.5rem;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:1.25rem}
+.scoring-block{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;margin:0.75rem 0}
+.mobile-toggle{display:none;position:fixed;top:1rem;left:1rem;z-index:200;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:8px 12px;font-size:13px;cursor:pointer;color:var(--color-text-primary)}
+</style>
+</head>
+<body>
+
+<button class="mobile-toggle" id="menuBtn" onclick="document.querySelector('.nav').classList.toggle('open')">&#9776; Menu</button>
+
+<div class="shell">
+<nav class="nav" id="sideNav">
+<div class="nav-title">Midwest RE Risk</div>
+<div class="nav-group">
+<div class="nav-group-label">Foundation</div>
+<a href="#" data-sec="overview" class="active">Executive summary</a>
+<a href="#" data-sec="problem">1. Problem framing</a>
+<a href="#" data-sec="landscape">2. Risk landscape</a>
+<a href="#" data-sec="framework">3. Risk framework</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-label">Research</div>
+<a href="#" data-sec="hypotheses">4. Hypotheses</a>
+<a href="#" data-sec="kpis">5. KPIs &amp; metrics</a>
+<a href="#" data-sec="edge">6. Edge cases</a>
+<a href="#" data-sec="competitive">7. Competitive landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-label">Product</div>
+<a href="#" data-sec="data">8. Data architecture</a>
+<a href="#" data-sec="personas">9. User personas</a>
+<a href="#" data-sec="modules">10. Dashboard modules</a>
+<a href="#" data-sec="scenarios">11. Scenario stress tests</a>
+<a href="#" data-sec="advanced">12. Advanced ideas</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-label">Delivery</div>
+<a href="#" data-sec="limitations">13. Limitations</a>
+<a href="#" data-sec="mvp">14. MVP recommendation</a>
+<a href="#" data-sec="deliverables">15. Deliverables</a>
+</div>
+</nav>
+
+<main class="main">
+
+<!-- OVERVIEW -->
+<section class="section active" id="overview">
+<h1>Midwest RE Investor Risk Platform</h1>
+<p class="section-intro">A region-specific risk assessment product for real estate investors operating across the 12-state U.S. Midwest. This research document covers all 15 sections of the product specification.</p>
+<div class="card-grid card-grid-3" style="margin-bottom:1.5rem">
+<div class="metric-card"><div class="metric-label">Midwest RE market size</div><div class="metric-value">~$2.1T</div><div class="metric-sub">Residential asset value</div></div>
+<div class="metric-card"><div class="metric-label">States covered</div><div class="metric-value">12</div><div class="metric-sub">IL IN OH MI WI MN MO IA KS NE ND SD</div></div>
+<div class="metric-card"><div class="metric-label">Risk categories</div><div class="metric-value">10</div><div class="metric-sub">Macro → liquidity</div></div>
+<div class="metric-card"><div class="metric-label">KPIs tracked</div><div class="metric-value">28+</div><div class="metric-sub">Property to state level</div></div>
+<div class="metric-card"><div class="metric-label">Investor personas</div><div class="metric-value">8</div><div class="metric-sub">Retail to institutional</div></div>
+<div class="metric-card"><div class="metric-label">Dashboard modules</div><div class="metric-value">13</div><div class="metric-sub">MVP + V2 + V3</div></div>
+</div>
+<h2>Top 10 Midwest-specific risks</h2>
+<div class="card">
+<table>
+<thead><tr><th>#</th><th>Risk</th><th>Severity</th><th>Asset class</th><th>Key signal</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Older housing stock / hidden capex</td><td><span class="badge badge-crit">Critical</span></td><td>SFR, Small MF</td><td>Build year, permit pulls</td></tr>
+<tr><td>2</td><td>Population stagnation / outmigration</td><td><span class="badge badge-high">High</span></td><td>All</td><td>Net migration, school enrollment</td></tr>
+<tr><td>3</td><td>Single-employer concentration</td><td><span class="badge badge-high">High</span></td><td>All</td><td>HHI index, layoff filings</td></tr>
+<tr><td>4</td><td>Property tax reassessment shock</td><td><span class="badge badge-high">High</span></td><td>SFR, MF</td><td>Assessed/market ratio, reassessment cycle</td></tr>
+<tr><td>5</td><td>Refinance risk in thin-comp markets</td><td><span class="badge badge-high">High</span></td><td>SFR, Small MF</td><td>Transaction volume, appraisal gap</td></tr>
+<tr><td>6</td><td>Freeze-thaw / winter physical damage</td><td><span class="badge badge-med">Medium</span></td><td>All residential</td><td>Climate zone, NOAA severity</td></tr>
+<tr><td>7</td><td>Rent affordability ceiling</td><td><span class="badge badge-med">Medium</span></td><td>SFR, MF</td><td>Rent-to-income ratio</td></tr>
+<tr><td>8</td><td>College-town demand cyclicality</td><td><span class="badge badge-med">Medium</span></td><td>STR, small MF</td><td>Enrollment trends, policy changes</td></tr>
+<tr><td>9</td><td>Exit liquidity risk</td><td><span class="badge badge-high">High</span></td><td>All</td><td>Days on market, transaction velocity</td></tr>
+<tr><td>10</td><td>Insurance premium creep</td><td><span class="badge badge-med">Medium</span></td><td>All</td><td>Loss ratio trends, climate score</td></tr>
+</tbody>
+</table>
+</div>
+<h2>Product opportunity summary</h2>
+<div class="callout"><p>No existing tool provides Midwest-specific, multi-risk-type scoring at the property-to-metro level that a real investor can use in acquisition underwriting, hold monitoring, and exit timing. This is a genuine white space.</p></div>
+<div class="two-col">
+<div class="card"><h3>What the market is missing</h3><ul><li>Midwest-calibrated cap rate benchmarks by submarket type</li><li>Winter damage / freeze-thaw capex models</li><li>Property tax reassessment shock estimators</li><li>Employer concentration risk at ZIP level</li><li>Appraisal gap / refinance risk for thin-comp markets</li><li>Integrated hold/sell timing signal</li></ul></div>
+<div class="card"><h3>MVP product recommendation</h3><ul><li>Target: buy-and-hold SFR + small MF investor</li><li>Primary data: public + ATTOM/CoreLogic</li><li>Core score: Composite Investor Risk Score (CIRS)</li><li>MVP modules: Market compare, Property underwrite, Stress test</li><li>Launch metros: Chicago, Columbus, Indianapolis, KC, Milwaukee</li><li>V1 data: mostly public; paid data unlocks property-level depth</li></ul></div>
+</div>
+</section>
+
+<!-- PROBLEM FRAMING -->
+<section class="section" id="problem">
+<h1>1. Problem framing</h1>
+<p class="section-intro">Risk assessment in real estate is not a single number — it is a multi-dimensional evaluation of the probability and magnitude of return deviation across the entire investment lifecycle.</p>
+<h2>What risk means for an RE investor</h2>
+<div class="card-grid card-grid-2">
+<div class="card"><h3>Market risk</h3><p>Macro forces affecting all properties in a geography: employment, migration, interest rates, supply pipeline. Affects entry price and exit value.</p><div class="tag tag-blue">Metro-level</div><div class="tag tag-gray">Quarterly update</div></div>
+<div class="card"><h3>Asset risk</h3><p>Property-specific: age, condition, deferred maintenance, building systems. Latent capex that overwhelms headline cash flow — especially severe in pre-1970 Midwest stock.</p><div class="tag tag-amber">Property-level</div><div class="tag tag-amber">Annual</div></div>
+<div class="card"><h3>Financing risk</h3><p>LTV, DSCR sensitivity, refinance risk at maturity, appraisal gap risk in thin markets. Midwest assets appreciate more slowly, compressing equity buffer over hold period.</p><div class="tag tag-red">Deal-level</div><div class="tag tag-gray">Monthly</div></div>
+<div class="card"><h3>Operational risk</h3><p>PM quality, turnover, scattered-site management, self-management limitations. Higher in geographically dispersed Midwest portfolios.</p><div class="tag tag-amber">Portfolio-level</div><div class="tag tag-gray">Monthly</div></div>
+<div class="card"><h3>Tenant / demand risk</h3><p>Income levels, employment stability, delinquency probability, demographic trends. Midwest workforce renter base is more sensitive to manufacturing job loss cycles.</p><div class="tag tag-amber">ZIP-level</div><div class="tag tag-gray">Quarterly</div></div>
+<div class="card"><h3>Regulatory / legal risk</h3><p>City-by-city eviction rules, inspection requirements, rent control exposure, zoning. Chicago vs. Columbus vs. Detroit represent very different landlord environments.</p><div class="tag tag-blue">City-level</div><div class="tag tag-gray">Annual</div></div>
+<div class="card"><h3>Climate / physical risk</h3><p>Freeze-thaw cycles, tornado, hail, ice storms, sewer backup from aging combined sewer systems. Different profile from coastal — less catastrophic but higher-frequency.</p><div class="tag tag-green">Property-level</div><div class="tag tag-gray">Annual</div></div>
+<div class="card"><h3>Liquidity / exit risk</h3><p>Can you sell at a reasonable price in a reasonable time? Secondary Midwest markets have thin buyer pools, especially for larger assets or non-standard properties.</p><div class="tag tag-red">Market-level</div><div class="tag tag-amber">Quarterly</div></div>
+</div>
+<h2>Why Midwest needs a different product</h2>
+<div class="callout callout-warn"><p>National dashboards assume coastal appreciation dynamics. In a market where 3–5% annual appreciation is a good year (vs. 7–10% in coastal markets), financing risk, capex burden, and exit timing matter far more than price appreciation timing.</p></div>
+<ul>
+<li>Price-to-rent ratios are lower — cash flow dominates over appreciation as the return driver</li>
+<li>Housing stock is older — median age in many Midwest markets is 50–70+ years</li>
+<li>Employment bases are more concentrated and cyclical (manufacturing, agriculture, healthcare, education)</li>
+<li>Insurance risk profile is different: tornado, hail, ice, freeze-thaw rather than hurricane/wildfire</li>
+<li>Property tax systems vary enormously by state and reassessment practice</li>
+<li>Exit liquidity is thinner in secondary and rural markets — buyer pool is smaller</li>
+<li>Eviction/landlord-tenant law is radically different city to city</li>
+</ul>
+<h2>Investor types and decision support</h2>
+<table>
+<thead><tr><th>Investor type</th><th>Primary decisions</th><th>Key risk concern</th><th>Dashboard priority</th></tr></thead>
+<tbody>
+<tr><td>Retail / first-time</td><td>Market selection, property screening</td><td>Capex surprise, overpaying</td><td>Simple score, plain-English alerts</td></tr>
+<tr><td>Buy-and-hold landlord</td><td>Underwriting, hold monitoring</td><td>Cash flow sustainability, tenant quality</td><td>DSCR tracker, operating cost models</td></tr>
+<tr><td>BRRRR investor</td><td>ARV confidence, refinance timing</td><td>Appraisal gap, comp thinness</td><td>Refinance stress test, comp depth</td></tr>
+<tr><td>Flipper</td><td>Days-on-market, exit velocity</td><td>Liquidity risk, capex creep</td><td>Liquidity score, transaction velocity</td></tr>
+<tr><td>Syndicator</td><td>LP narrative, diversification</td><td>Concentration, story risk</td><td>Portfolio view, scenario outputs</td></tr>
+<tr><td>Private equity / institutional</td><td>Portfolio construction, market allocation</td><td>Macro, regulatory, concentration</td><td>Metro comparison, regulatory map</td></tr>
+<tr><td>Lender / credit analyst</td><td>LTV, DSCR, collateral quality</td><td>Collateral liquidation risk</td><td>Stress test, liquidity score</td></tr>
+<tr><td>Developer</td><td>Land basis, supply pipeline, entitlement</td><td>Oversupply, permit risk</td><td>Supply pipeline, permit tracker</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- RISK LANDSCAPE -->
+<section class="section" id="landscape">
+<h1>2. Midwest-specific risk landscape</h1>
+<p class="section-intro">The most important Midwest-specific risks, with measurement approaches and leading indicators for each.</p>
+<div class="risk-category rc-asset">
+<h3>Older housing stock / latent capex risk</h3>
+<p>Midwest housing stock skews heavily pre-1980. Chicago, Detroit, Cleveland, and St. Louis have median build years in the 1940s–1960s. Properties may have knob-and-tube wiring, galvanized plumbing, original sewer laterals, asbestos insulation, lead paint, and deteriorating foundations.</p>
+<div class="tag tag-red">Critical risk</div><div class="tag tag-gray">SFR, Small MF</div>
+<table><thead><tr><th>How it affects returns</th><th>How to measure</th><th>Leading indicators</th></tr></thead>
+<tbody><tr><td>Capex of $25k–$80k can turn a positive-cash-flow deal into a 3–5 year loss</td><td>Build year, permit history, inspection reports</td><td>Unpulled permits, deferred maintenance signals, roof age estimators</td></tr></tbody></table>
+<div class="formula">Capex Reserve Score = f(build_year, last_major_system_replacement, local_labor_cost_index, property_type)</div>
+</div>
+<div class="risk-category rc-market">
+<h3>Population stagnation and outmigration</h3>
+<p>Illinois, Michigan, and Ohio are among the most consistent net population losers. Even within growing states, the intra-state pattern matters: suburban Columbus grows while rural Ohio shrinks.</p>
+<div class="tag tag-amber">High risk</div><div class="tag tag-blue">All asset classes</div>
+<div class="formula">Population Risk Score = (5yr_net_migration_rate × 0.4) + (school_enrollment_trend × 0.3) + (working_age_cohort_change × 0.3)</div>
+</div>
+<div class="risk-category rc-market">
+<h3>Employer concentration risk</h3>
+<p>Many Midwest secondary cities are dominated by 1–3 major employers: Deere in Moline, Caterpillar in Peoria, GM in Flint, Whirlpool in Benton Harbor. When that employer announces layoffs or relocations, local vacancy and delinquency can spike within 6–12 months.</p>
+<div class="tag tag-red">Critical risk</div><div class="tag tag-blue">All</div>
+<table><thead><tr><th>Metric</th><th>Formula</th><th>Signal</th></tr></thead>
+<tbody>
+<tr><td>Employer HHI</td><td>Sum of (employer_share²) for top employers in MSA</td><td>HHI &gt; 1500 = concentrated</td></tr>
+<tr><td>Top-3 employer share</td><td>Top-3 employers / total non-farm payroll</td><td>&gt;20% = high exposure</td></tr>
+<tr><td>WARN Act filings</td><td>Trailing 12-month layoff notices vs. prior year</td><td>Rising = early warning</td></tr>
+</tbody></table>
+</div>
+<div class="risk-category rc-finance">
+<h3>Property tax reassessment shock</h3>
+<p>Illinois reassesses every 3 years in Cook County (every 4 elsewhere). After a sale, many jurisdictions reset assessed value to sale price — doubling or tripling the tax burden instantly.</p>
+<div class="tag tag-red">Critical risk</div><div class="tag tag-gray">SFR, MF</div>
+<div class="formula">Tax Shock Risk = (market_value / current_assessed_value - 1) × effective_tax_rate × purchase_price</div>
+<div class="callout callout-warn"><p>Cook County effective rates can reach 2.5–3.5% on reassessed value. A $300k property reassessed from $120k assessed base could see taxes jump $4,500–$6,000/year overnight.</p></div>
+</div>
+<div class="risk-category rc-climate">
+<h3>Freeze-thaw and winter physical damage</h3>
+<p>Unlike coastal catastrophe risk, Midwest climate risk is high-frequency and cumulative: ice dams, burst pipes, foundation heave, sewer backup during spring thaw, roof collapse from ice/snow load.</p>
+<div class="tag tag-amber">Medium-High risk</div>
+<ul>
+<li>Freeze-thaw cycles per year (NOAA data) correlate with foundation and pipe failure rates</li>
+<li>Tornado risk corridors: IA, KS, NE, MO, southern IL/IN — not well-priced in insurance</li>
+<li>Hail risk: broad across the region — a major unpriced driver of roof claim frequency</li>
+<li>Sewer backup: aging combined sewer systems in Chicago, Detroit, Cleveland, Milwaukee create regular backup claims that standard HO policies exclude</li>
+</ul>
+</div>
+<div class="risk-category rc-finance">
+<h3>Refinance risk in thin-comp markets</h3>
+<p>BRRRR investors who rely on refinancing face a Midwest-specific problem: in secondary markets (Davenport, Terre Haute, Sioux City), appraisers may have only 3–5 comparable sales, not 30. A bad quarter of comps can produce an appraisal 10–15% below the investor's expectation, trapping equity.</p>
+<div class="tag tag-red">High risk for BRRRR</div>
+<div class="formula">Refinance Risk Score = (transaction_volume_zscore × 0.35) + (comp_age_months / 12 × 0.3) + (appraisal_gap_history × 0.35)</div>
+</div>
+<div class="risk-category rc-regulatory">
+<h3>Landlord-tenant law variation</h3>
+<table><thead><tr><th>Market</th><th>Eviction timeline</th><th>Landlord-friendliness</th><th>Key risks</th></tr></thead>
+<tbody>
+<tr><td>Chicago / Cook County</td><td>3–6+ months</td><td>Tenant-friendly</td><td>RLTO liability, just-cause eviction ordinance</td></tr>
+<tr><td>Indianapolis</td><td>4–6 weeks</td><td>Landlord-friendly</td><td>Minimal friction</td></tr>
+<tr><td>Columbus</td><td>6–10 weeks</td><td>Moderate</td><td>Inspection program in some areas</td></tr>
+<tr><td>Detroit / Wayne Co.</td><td>2–4 months</td><td>Complex</td><td>Blight court, land bank complications</td></tr>
+<tr><td>Milwaukee</td><td>8–12 weeks</td><td>Moderate</td><td>Some local just-cause proposals</td></tr>
+<tr><td>Minneapolis</td><td>3–4 months</td><td>Tenant-friendly</td><td>Strong tenant protections, just-cause enacted</td></tr>
+</tbody></table>
+</div>
+<div class="risk-category rc-market">
+<h3>Rent affordability ceiling</h3>
+<p>Midwest markets have lower median incomes than coastal metros, creating a hard ceiling on rent growth. When tenants are already at 35–40% rent-to-income, further rent increases produce delinquency, not revenue growth.</p>
+<div class="formula">Affordability Stress = median_asking_rent / (median_household_income / 12)
+Threshold: >35% is elevated delinquency risk; >40% is critical.</div>
+</div>
+<div class="risk-category rc-liquidity">
+<h3>Exit liquidity risk in secondary/rural markets</h3>
+<p>In Chicago or Columbus, there is always a next buyer. In Dubuque, Joplin, or Bismarck, the buyer pool is thin — often limited to local investors. This is almost never modeled in acquisition underwriting but is critical to total return.</p>
+<div class="tag tag-red">Undermodeled risk</div>
+<div class="formula">Exit Liquidity Score = (annual_transaction_count × 0.4) + (days_on_market_zscore × 0.35) + (investor_buyer_share × 0.25)</div>
+</div>
+</section>
+
+<!-- RISK FRAMEWORK -->
+<section class="section" id="framework">
+<h1>3. Risk framework</h1>
+<p class="section-intro">A structured, scoreable framework that powers all dashboard calculations.</p>
+<h2>Composite Investor Risk Score (CIRS)</h2>
+<div class="scoring-block">
+<div class="formula">CIRS = Σ (category_score_i × weight_i) × confidence_modifier × scenario_multiplier
+
+Default weights:
+  macroeconomic_risk    = 0.15
+  local_economic_risk   = 0.20
+  housing_market_risk   = 0.15
+  property_risk         = 0.15
+  financing_risk        = 0.12
+  climate_insurance     = 0.08
+  legal_regulatory      = 0.07
+  liquidity_exit        = 0.08</div>
+</div>
+<h2>Category scoring logic</h2>
+<div class="card">
+<table>
+<thead><tr><th>Category</th><th>Sub-risks</th><th>Key indicators</th><th>Granularity</th><th>Refresh</th></tr></thead>
+<tbody>
+<tr><td><strong>Macroeconomic</strong></td><td>Rate risk, cap rate compression, credit cycle</td><td>Fed funds rate, 10yr Treasury, CRE spread, DSCR floor</td><td>National</td><td>Weekly</td></tr>
+<tr><td><strong>Local economic</strong></td><td>Employment, wage growth, employer concentration, migration</td><td>Unemployment rate, WARN filings, net migration, HHI index</td><td>MSA / County</td><td>Monthly</td></tr>
+<tr><td><strong>Housing market</strong></td><td>Supply/demand balance, price trend, affordability, overbuilding</td><td>Months supply, permit rate, price-to-rent, cap rate spread</td><td>ZIP / Metro</td><td>Monthly</td></tr>
+<tr><td><strong>Property performance</strong></td><td>Physical condition, capex, build year, systems age</td><td>Build year, permit history, inspection flags, capex reserve model</td><td>Parcel</td><td>Annually</td></tr>
+<tr><td><strong>Neighborhood</strong></td><td>Crime, school quality, distress index, blight</td><td>Crime index, vacancy rate, foreclosure rate, distress score</td><td>Census tract</td><td>Quarterly</td></tr>
+<tr><td><strong>Financing</strong></td><td>LTV, DSCR, refinance risk, appraisal gap</td><td>Current DSCR, LTV, comp volume, appraisal gap history</td><td>Parcel + Metro</td><td>Monthly</td></tr>
+<tr><td><strong>Climate / insurance</strong></td><td>Freeze-thaw, tornado, hail, flood, sewer backup</td><td>NOAA hazard score, FEMA flood zone, insurance loss ratio</td><td>Parcel + ZIP</td><td>Annually</td></tr>
+<tr><td><strong>Legal / regulatory</strong></td><td>Eviction timeline, inspection regime, tax regime</td><td>Eviction timeline index, code violation history, tax rate trend</td><td>City / County</td><td>Annually</td></tr>
+<tr><td><strong>Liquidity / exit</strong></td><td>Buyer pool depth, DOM, price discovery quality</td><td>Transaction volume, DOM trend, investor share, price cut rate</td><td>ZIP / Metro</td><td>Monthly</td></tr>
+<tr><td><strong>Portfolio concentration</strong></td><td>Geographic overlap, asset-type overlap, employer overlap</td><td>Herfindahl across portfolio, correlation of assets</td><td>Portfolio</td><td>On change</td></tr>
+</tbody>
+</table>
+</div>
+<h2>Confidence score</h2>
+<div class="scoring-block">
+<div class="formula">Confidence Score = (data_completeness × 0.5) + (data_freshness × 0.3) + (comp_depth × 0.2)
+
+data_completeness = available_indicators / required_indicators
+data_freshness    = 1 - (avg_data_age_months / 24)  [capped at 0]
+comp_depth        = min(transaction_count_12mo / 20, 1.0)
+
+Flag if Confidence Score < 0.60 → show "Low confidence" warning on score card</div>
+</div>
+<h2>Scenario stress multipliers</h2>
+<div class="card-grid card-grid-3">
+<div class="metric-card"><div class="metric-label">Baseline</div><div class="metric-value">1.0×</div><div class="metric-sub">Current conditions</div></div>
+<div class="metric-card"><div class="metric-label">Mild stress</div><div class="metric-value">1.25×</div><div class="metric-sub">Rates +150bps, vacancy +3%</div></div>
+<div class="metric-card"><div class="metric-label">Severe stress</div><div class="metric-value">1.75×</div><div class="metric-sub">Recession, employer exit</div></div>
+</div>
+</section>
+
+<!-- HYPOTHESES -->
+<section class="section" id="hypotheses">
+<h1>4. Hypotheses to test</h1>
+<p class="section-intro">Research and product hypotheses organized by domain.</p>
+<h2>Market hypotheses</h2>
+<div class="hypothesis-card"><div class="hyp-title">H1: Midwest metros with stable employment + moderate supply outperform on risk-adjusted returns</div><div class="hyp-body"><strong>Test:</strong> Regress total returns against employment stability index and permit-to-household ratio across 50 Midwest MSAs over 10 years. <strong>Data needed:</strong> FHFA HPI, BLS LAUS, Census permits, CoStar cap rates. <strong>Product feature:</strong> "Market stability score" in metro comparison module.</div></div>
+<div class="hypothesis-card"><div class="hyp-title">H2: Secondary Midwest markets show attractive cap rates but materially weaker exit-adjusted returns</div><div class="hyp-body"><strong>Test:</strong> Compare hold-period IRR in primary vs. secondary markets controlling for initial cap rate. <strong>Product feature:</strong> Exit-adjusted IRR calculator overlaying market liquidity score.</div></div>
+<div class="hypothesis-card"><div class="hyp-title">H3: High price-to-rent compression predicts weaker next-3-year investor returns</div><div class="hyp-body"><strong>Test:</strong> Time-series regression of forward 3-year cap rate change on starting price-to-rent ratio. <strong>Product feature:</strong> Price-to-rent valuation alert on market overview page.</div></div>
+<h2>Asset-level hypotheses</h2>
+<div class="hypothesis-card"><div class="hyp-title">H4: Pre-1960 properties have systematically underestimated capex that overwhelms headline cash flow</div><div class="hyp-body"><strong>Test:</strong> Survey capex actuals vs. underwriting projections by construction decade. Hypothesis: pre-1960 properties run 40–80% above projected capex. <strong>Product feature:</strong> Vintage-adjusted capex reserve estimator.</div></div>
+<div class="hypothesis-card"><div class="hyp-title">H5: Properties in moderate tornado/hail corridors appear cheap but underperform after true insurance costs</div><div class="hyp-body"><strong>Test:</strong> Compare net operating income sensitivity to insurance cost assumptions across climate risk tiers. <strong>Product feature:</strong> Insurance stress test in property underwriting panel.</div></div>
+<h2>Financing hypotheses</h2>
+<div class="hypothesis-card"><div class="hyp-title">H6: Higher leverage disproportionately hurts slow-appreciation Midwest assets relative to coastal markets</div><div class="hyp-body"><strong>Test:</strong> Simulate levered vs. unlevered IRR across appreciation rate scenarios. Midwest averaging 2–3% appreciation should show leverage destruction at high LTV. <strong>Product feature:</strong> Leverage sensitivity chart in financing stress test.</div></div>
+<div class="hypothesis-card"><div class="hyp-title">H7: Refinance risk is significantly higher in MSAs with fewer than 15 comparable transactions per quarter</div><div class="hyp-body"><strong>Test:</strong> Correlate appraisal-to-expectation gap with quarterly comp count per ZIP. <strong>Product feature:</strong> "Refinance readiness" score gated by comp depth indicator.</div></div>
+<h2>Behavioral / decision hypotheses</h2>
+<div class="hypothesis-card"><div class="hyp-title">H8: Investors systematically overweight cap rate and underweight exit liquidity, tax burden, and capex</div><div class="hyp-body"><strong>Test:</strong> Conjoint analysis with 50 Midwest RE investors. <strong>Product feature:</strong> "What actually matters" sensitivity waterfall in underwriting panel.</div></div>
+<div class="hypothesis-card"><div class="hyp-title">H9: Investors chase low purchase prices in declining markets without properly discounting for absorption drag</div><div class="hyp-body"><strong>Test:</strong> Track purchases in ZIP codes with negative 5-year price trend and compare actual realized returns to IRR at purchase. <strong>Product feature:</strong> "Value trap" alert for sub-$100k properties in negative migration ZIPs.</div></div>
+</section>
+
+<!-- KPIs -->
+<section class="section" id="kpis">
+<h1>5. Key metrics and KPIs</h1>
+<p class="section-intro">28 core KPIs for the dashboard, each with definition, investor interpretation, and data source.</p>
+<h2>Cash flow and returns metrics</h2>
+<table>
+<thead><tr><th>KPI</th><th>Definition / Formula</th><th>Ideal direction</th><th>Limitation</th><th>Level</th></tr></thead>
+<tbody>
+<tr><td><strong>Cap rate</strong></td><td>NOI / Property Value</td><td>Higher = better yield; context-dependent on market cycle</td><td>Ignores capex, financing, vacancy assumption quality</td><td>Property / ZIP</td></tr>
+<tr><td><strong>Cash-on-cash return</strong></td><td>Annual pre-tax cash flow / Total cash invested</td><td>Higher better; 7–10% target in Midwest</td><td>Pre-tax only; ignores appreciation and capex</td><td>Property</td></tr>
+<tr><td><strong>DSCR</strong></td><td>NOI / Annual debt service</td><td>&gt;1.25 for stability; &lt;1.0 = negative cash flow</td><td>Sensitive to vacancy and rate assumptions</td><td>Property</td></tr>
+<tr><td><strong>Debt yield</strong></td><td>NOI / Loan balance</td><td>&gt;9–10% for lender comfort</td><td>May not reflect current market rate expectations</td><td>Property</td></tr>
+<tr><td><strong>Break-even occupancy</strong></td><td>Fixed costs / (Gross scheduled rent × (1 - vacancy))</td><td>Lower better; &lt;75% is strong</td><td>Does not account for capex shock</td><td>Property</td></tr>
+</tbody>
+</table>
+<h2>Market and demand metrics</h2>
+<table>
+<thead><tr><th>KPI</th><th>Formula / Source</th><th>Interpretation</th><th>Midwest nuance</th></tr></thead>
+<tbody>
+<tr><td><strong>Vacancy rate</strong></td><td>Vacant units / Total units (Census, CoStar)</td><td>&lt;5% tight; &gt;8% softening</td><td>Midwest metros often run 5–8%; rural can be 10–15%</td></tr>
+<tr><td><strong>Rent growth (YoY)</strong></td><td>(Current rent - Prior year rent) / Prior year rent</td><td>&gt;3% healthy; &lt;0% dangerous</td><td>Ceiling effect kicks in faster given lower incomes</td></tr>
+<tr><td><strong>Price-to-rent ratio</strong></td><td>Median home price / Annual median rent</td><td>Lower = better for investors</td><td>Midwest runs 10–16× vs coastal 20–35×</td></tr>
+<tr><td><strong>Sales volume trend</strong></td><td>12-month rolling transaction count vs. prior 12 months</td><td>Declining = liquidity warning</td><td>Very sensitive in secondary Midwest markets</td></tr>
+<tr><td><strong>Days on market</strong></td><td>Average DOM for comparable properties</td><td>Lower = more liquid</td><td>Secondary Midwest markets: 60–120 DOM common</td></tr>
+<tr><td><strong>Inventory trend</strong></td><td>Months of supply = Listings / Monthly sales pace</td><td>&lt;3 = seller's market; &gt;6 = buyer's market</td><td>Can shift rapidly in smaller Midwest markets</td></tr>
+<tr><td><strong>Permit activity</strong></td><td>New residential permits per 1000 households (Census)</td><td>High = supply risk in short term</td><td>Watch multifamily overbuilding in Columbus, Indy, KC</td></tr>
+</tbody>
+</table>
+<h2>Risk and burden metrics</h2>
+<table>
+<thead><tr><th>KPI</th><th>Formula</th><th>Threshold</th><th>Data source</th></tr></thead>
+<tbody>
+<tr><td><strong>Rent-to-income burden</strong></td><td>Median asking rent / (Median HH income / 12)</td><td>&gt;35% = elevated delinquency risk</td><td>ACS + Zillow/CoStar rent data</td></tr>
+<tr><td><strong>Tax burden</strong></td><td>Annual taxes / Annual gross rent</td><td>&gt;20% is high; IL often reaches 25–35%</td><td>County assessor data</td></tr>
+<tr><td><strong>Insurance burden</strong></td><td>Annual premium / Annual gross rent</td><td>&gt;8–10% is elevated</td><td>Quote integrations or loss ratio proxies</td></tr>
+<tr><td><strong>Capex reserve estimate</strong></td><td>f(build_year, sq_ft, local_labor_cost, systems_age)</td><td>Typical: $1–3/sq ft/yr; pre-1960 stock: $3–5</td><td>Model + inspection data</td></tr>
+<tr><td><strong>Climate hazard score</strong></td><td>Composite: tornado risk + hail + flood + freeze-thaw frequency</td><td>0–100 scale; Midwest avg ~35</td><td>NOAA + FEMA + proprietary</td></tr>
+<tr><td><strong>Employer concentration score</strong></td><td>HHI of top employers in MSA</td><td>&gt;1500 = moderate risk; &gt;2500 = high risk</td><td>BLS QCEW + WARN Act</td></tr>
+<tr><td><strong>Exit liquidity score</strong></td><td>Transaction volume + DOM score + investor buyer share</td><td>0–100; &lt;40 = thin market</td><td>ATTOM + MLS data</td></tr>
+<tr><td><strong>Refinance risk score</strong></td><td>Comp volume + appraisal gap history + rate sensitivity</td><td>High score = high refinance risk</td><td>ATTOM + FHFA + lender data</td></tr>
+<tr><td><strong>Neighborhood distress score</strong></td><td>Vacancy + foreclosure rate + crime index + blight indicators</td><td>0–100; &gt;60 = distressed</td><td>HUD + ATTOM + local open data</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- EDGE CASES -->
+<section class="section" id="edge">
+<h1>6. Edge cases and failure scenarios</h1>
+<p class="section-intro">15 scenarios where the dashboard could mislead investors if not designed carefully.</p>
+<div class="callout callout-danger"><p>Most dashboard failures come from data that is stale, geographically averaged, or survivorship-biased. Design for explicit uncertainty, not false precision.</p></div>
+<table>
+<thead><tr><th>Failure scenario</th><th>How it misleads</th><th>Detection method</th><th>UI warning</th><th>Manual diligence</th></tr></thead>
+<tbody>
+<tr><td>Structurally shrinking market appearing "cheap"</td><td>Low price-to-rent looks attractive; ignores price decline trajectory</td><td>5-year price trend + net migration flag</td><td>"Value trap alert: negative 5-yr migration + declining prices"</td><td>Drive market; assess demand sources</td></tr>
+<tr><td>Strong rent estimates, weak realized collections</td><td>AVM rents from listings; does not reflect actual collection in distressed areas</td><td>Rent estimate vs. eviction court filing density</td><td>"High eviction rate ZIP — actual collections may be 10–20% below listed rents"</td><td>Talk to local PMs; review actual rent rolls</td></tr>
+<tr><td>Attractive cap rate from hidden distress</td><td>Seller inflated rents, deferred maintenance, long vacancies just filled</td><td>Permit history gap, sudden occupancy change</td><td>"Cap rate may not be sustainable — flag for independent rent roll verification"</td><td>Request 12-month bank statements</td></tr>
+<tr><td>Low official flood risk, repeated sewer backup</td><td>FEMA Zone X = "no flood risk"; aging combined sewer systems backup in rain events</td><td>City sewer system age + historical claim data</td><td>"Sewer backup risk not captured by FEMA flood map"</td><td>Request sewer backup rider quote</td></tr>
+<tr><td>Property tax reassessment not modeled</td><td>Pro forma uses current assessed value; post-purchase reset doubles tax burden</td><td>Assessed/market ratio flag if &lt;0.7</td><td>"Potential tax reassessment risk: assessed value is only 58% of market value"</td><td>Review county reassessment schedule; model reset</td></tr>
+<tr><td>Insurance quotes diverge sharply from reality</td><td>First quote is low; underwriter prices higher after full inspection</td><td>Flag if model insurance &lt;50% of market comp insurance</td><td>"Insurance estimate is preliminary — always obtain binding quotes before close"</td><td>Get minimum 2 quotes including specialty carriers</td></tr>
+<tr><td>Older MF with latent foundation/plumbing issues</td><td>Building looks solid; no visible issues but sewer lateral is original clay tile from 1952</td><td>Build year &lt; 1965 flag + no major system permits in 20+ years</td><td>"Vintage capex alert: no major system permits in 25+ years"</td><td>Hire specialist inspectors: structural, sewer scope, electrical panel</td></tr>
+<tr><td>Crime data lagging reality</td><td>FBI UCR data is 12–18 months stale; rapidly changing neighborhoods mispriced</td><td>Data vintage flag; cross-reference 911 call data where available</td><td>"Crime index based on [year] data — verify with local sources"</td><td>Drive the street at different times</td></tr>
+<tr><td>ZIP-code averages masking block-to-block variation</td><td>ZIP average looks fine; specific block has concentrated blight/vacancy</td><td>Offer census tract or block group data where available</td><td>"ZIP-level score shown; block-to-block variation may differ significantly"</td><td>Street-level comps; Google Street View time-lapse</td></tr>
+<tr><td>College-town demand collapse</td><td>University announces online-first policy; enrollment drops 20%; rental market craters</td><td>Enrollment trend + online enrollment share flag</td><td>"College-town dependency: 40%+ of rental demand tied to university"</td><td>Check university financial health, enrollment trend</td></tr>
+<tr><td>Commercial tenant rollover cliff</td><td>Mixed-use building has single anchor tenant whose lease expires in 18 months</td><td>Lease expiry flag in commercial underwriting</td><td>"Major lease rollover in [X months] — re-underwrite at market rent"</td><td>Review lease terms; assess tenant creditworthiness</td></tr>
+<tr><td>Survivorship bias in comp data</td><td>Sales data reflects properties that sold — not failed listings that were withdrawn</td><td>Flag expired listing rate in comparable set</td><td>"High expired listing rate in this ZIP — sold comps may be optimistic"</td><td>Review MLS for expired and withdrawn listings</td></tr>
+<tr><td>Stale data in rural/illiquid markets</td><td>Last comparable sale was 14 months ago; market conditions have changed</td><td>Confidence score auto-degrades with data age</td><td>"Low confidence: last comparable sale was 14 months ago"</td><td>Local broker outreach; assessor data</td></tr>
+<tr><td>Property passes stress test at current rates but fails at refinance</td><td>Acquisition DSCR is 1.30; refinance in 3 years at higher rates drops to 0.92</td><td>Refinance stress test at +200bps from today</td><td>"Refinance stress test fail: DSCR drops below 1.0 at [rate]"</td><td>Model hold period with rate sensitivity</td></tr>
+<tr><td>Composite score used as substitute for diligence</td><td>Investor relies on 74/100 score as green light; misses property-specific issues</td><td>UI design: scores are screening tools, not approval decisions</td><td>"This score is a screening tool — it does not replace property inspection, title search, or rent roll verification"</td><td>Always perform full due diligence on specific asset</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- COMPETITIVE LANDSCAPE -->
+<section class="section" id="competitive">
+<h1>7. Competitive landscape</h1>
+<p class="section-intro">Existing tools, their strengths and weaknesses for Midwest investor use cases, and the white space this product fills.</p>
+<table>
+<thead><tr><th>Tool</th><th>Target user</th><th>Strengths</th><th>Weaknesses for Midwest RE risk</th><th>Cost</th></tr></thead>
+<tbody>
+<tr><td><strong>Zillow / Zestimate</strong></td><td>Consumer buyers</td><td>Coverage, UX, rent estimates</td><td>No investor risk framing; Zestimate error rate high in thin markets; no capex, tax, or regulatory data</td><td>Free</td></tr>
+<tr><td><strong>Redfin</strong></td><td>Consumer buyers</td><td>Data freshness, DOM data</td><td>No investor tooling; no Midwest-specific risk</td><td>Free</td></tr>
+<tr><td><strong>Mashvisor</strong></td><td>SFR rental investors</td><td>Cash-on-cash estimates, STR/LTR comparison</td><td>Rent estimates often unreliable in secondary Midwest; no capex model; no climate/tax risk</td><td>~$120/mo</td></tr>
+<tr><td><strong>BiggerPockets calculators</strong></td><td>DIY landlords</td><td>Free, user-friendly, educational community</td><td>Manual data entry only; no market risk context; no scoring; no monitoring</td><td>Free / $39 Pro</td></tr>
+<tr><td><strong>ATTOM</strong></td><td>Data buyers, developers</td><td>Deep parcel data, transaction history, tax/AVM data</td><td>Raw data API — not a product; no investor risk narrative</td><td>API pricing, expensive</td></tr>
+<tr><td><strong>CoreLogic</strong></td><td>Lenders, institutional</td><td>Best-in-class AVM accuracy, mortgage data</td><td>Enterprise pricing only; not investor-facing</td><td>Enterprise</td></tr>
+<tr><td><strong>CoStar / LoopNet</strong></td><td>Commercial RE professionals</td><td>Best commercial data depth</td><td>Poor for residential; very expensive; limited risk framing for small investors</td><td>$400–$1200+/mo</td></tr>
+<tr><td><strong>HouseCanary</strong></td><td>Lenders, iBuyers</td><td>Good AVM, condition scoring models</td><td>Not investor-facing; no hold/sell risk monitoring</td><td>Per-report or enterprise</td></tr>
+<tr><td><strong>AirDNA</strong></td><td>STR investors</td><td>Best STR market data available</td><td>Only STR; no LTR, commercial, or portfolio risk</td><td>~$250/mo</td></tr>
+<tr><td><strong>First Street / Flood Factor</strong></td><td>Climate risk</td><td>Best consumer-facing climate risk tool</td><td>Focused on flood; does not cover Midwest freeze-thaw, hail, tornado well; no investor financial integration</td><td>Free / API</td></tr>
+<tr><td><strong>FRED / BLS / Census</strong></td><td>Researchers, analysts</td><td>Free, comprehensive economic data</td><td>Raw data; no investor synthesis; no property-level data</td><td>Free</td></tr>
+</tbody>
+</table>
+<h2>White space opportunities</h2>
+<div class="callout"><p>No tool combines: Midwest-calibrated risk scoring + property-level underwriting + tax reassessment modeling + freeze-thaw capex + employer concentration + hold/sell timing + refinance stress testing in a single investor-facing product.</p></div>
+<div class="two-col">
+<div class="card"><h3>Gaps current tools leave open</h3><ul><li>Midwest-specific capex model (vintage × climate zone)</li><li>Property tax reassessment shock estimator</li><li>Employer concentration risk at ZIP level</li><li>Refinance readiness score for thin-comp markets</li><li>Hold/sell timing signal incorporating all risk dimensions</li><li>Regulatory environment map across Midwest cities</li><li>Portfolio concentration risk across markets</li><li>Plain-English risk narrative for LP presentations</li></ul></div>
+<div class="card"><h3>Differentiation strategy</h3><ul><li>Region-first: go deep on Midwest before expanding nationally</li><li>Transparency: show scoring methodology, not black boxes</li><li>Investor-grade language, not consumer real estate language</li><li>Integrate public data first; sell paid data depth as premium tier</li><li>Build community trust through accurate Midwest-specific models</li><li>Portfolio view as network effect: more assets = more value</li></ul></div>
+</div>
+</section>
+
+<!-- DATA ARCHITECTURE -->
+<section class="section" id="data">
+<h1>8. Data architecture</h1>
+<p class="section-intro">Practical data strategy covering public sources, commercial sources, ingestion architecture, and known challenges.</p>
+<h2>A. Public data sources</h2>
+<table>
+<thead><tr><th>Source</th><th>What it provides</th><th>Granularity</th><th>Lag</th><th>Key use</th></tr></thead>
+<tbody>
+<tr><td>Census ACS 5-yr</td><td>Income, housing tenure, vacancy, household size, demographics</td><td>Census tract</td><td>1–2 years</td><td>Affordability stress, demand indicators</td></tr>
+<tr><td>BLS LAUS / QCEW</td><td>Unemployment, employment by industry, wages by MSA</td><td>County / MSA</td><td>1–2 months</td><td>Employer concentration, local economic score</td></tr>
+<tr><td>FRED</td><td>Macro rates, HPI, CPI, credit spreads</td><td>National / MSA</td><td>1 month</td><td>Macro risk, financing stress</td></tr>
+<tr><td>FHFA HPI</td><td>House price indexes</td><td>MSA / ZIP (quarterly)</td><td>1 quarter</td><td>Price trend, appreciation history</td></tr>
+<tr><td>FEMA NFIP / flood maps</td><td>Flood zone designation, loss history</td><td>Parcel</td><td>Annual</td><td>Climate/insurance risk</td></tr>
+<tr><td>NOAA</td><td>Severe weather events, tornado tracks, freeze events, hail data</td><td>County / grid</td><td>1–12 months</td><td>Climate hazard score</td></tr>
+<tr><td>HUD / USPS vacancy data</td><td>Address-level vacancy indicator</td><td>ZIP</td><td>Quarterly</td><td>Neighborhood distress</td></tr>
+<tr><td>County assessor / recorder</td><td>Tax records, assessed value, ownership, sale history</td><td>Parcel</td><td>1–12 months</td><td>Tax burden, property risk</td></tr>
+<tr><td>Census permits</td><td>New construction permit counts by type</td><td>Place / county</td><td>1 month</td><td>Supply pipeline</td></tr>
+<tr><td>DOL WARN Act filings</td><td>Mass layoff notices by employer and location</td><td>Employer</td><td>60 days notice</td><td>Employer concentration early warning</td></tr>
+<tr><td>City open data portals</td><td>Code violations, crime, 311, permits (where available)</td><td>Parcel / block</td><td>1–30 days</td><td>Neighborhood distress, code risk</td></tr>
+<tr><td>EPA EnviroMapper</td><td>Brownfields, contamination sites, Superfund</td><td>Parcel / site</td><td>Annual</td><td>Environmental risk for industrial/land</td></tr>
+</tbody>
+</table>
+<h2>B. Commercial / paid data sources</h2>
+<table>
+<thead><tr><th>Vendor</th><th>Key data</th><th>MVP priority</th><th>Est. cost range</th></tr></thead>
+<tbody>
+<tr><td>ATTOM Data Solutions</td><td>Parcel transactions, AVM, tax, foreclosure, ownership</td><td><span class="badge badge-crit">Critical</span></td><td>$500–5k/mo API</td></tr>
+<tr><td>CoreLogic</td><td>Best AVM, mortgage/lien data, property attributes</td><td><span class="badge badge-med">Phase 2</span></td><td>Enterprise</td></tr>
+<tr><td>CoStar / LoopNet</td><td>Commercial vacancy, rents, cap rates, comp sales</td><td><span class="badge badge-med">Phase 2</span></td><td>$400–1200/mo</td></tr>
+<tr><td>Zillow / RentCast API</td><td>Rent estimates by ZIP / bedroom count</td><td><span class="badge badge-crit">Critical</span></td><td>$50–500/mo</td></tr>
+<tr><td>First Street Foundation</td><td>Climate risk: flood, fire, wind, heat scores by parcel</td><td><span class="badge badge-med">Phase 2</span></td><td>API per-parcel</td></tr>
+<tr><td>Precisely (Spectrum)</td><td>Property risk, hazard modeling, sewer data</td><td><span class="badge badge-low">Phase 3</span></td><td>Enterprise</td></tr>
+<tr><td>SafeGraph / Placer.ai</td><td>Foot traffic, retail demand, mobility data</td><td><span class="badge badge-low">Phase 3</span></td><td>$1–5k/mo</td></tr>
+<tr><td>BuildFax / Verisk</td><td>Permit history, renovation data, building conditions</td><td><span class="badge badge-med">Phase 2</span></td><td>Per-report or API</td></tr>
+</tbody>
+</table>
+<h2>C. Architecture recommendations</h2>
+<div class="formula">Data layers:
+  raw_layer      → store exactly what was received from source (S3 / blob storage)
+  normalized     → standardized schema across counties/states (parcel_id, geo_id)
+  modeled        → computed scores and composite indicators
+  user_layer     → user-entered assumptions, overrides, portfolio data
+
+Geo hierarchy:
+  parcel_id → census_tract → ZIP → place → county → MSA → state
+
+Refresh cadence:
+  Weekly:   macro indicators (FRED, rates)
+  Monthly:  employment, rent estimates, permit data, transaction data
+  Quarterly: ACS, HPI, climate adjustments
+  On-event: WARN Act filings, code violations, assessor updates
+
+Scoring pipeline:
+  1. Ingest raw data into raw_layer
+  2. Normalize to parcel + geo IDs
+  3. Compute sub-scores per category
+  4. Blend into CIRS with logged weights + timestamp
+  5. Store score history for delta tracking
+  6. Flag confidence degradation when data ages past threshold</div>
+<h2>D. Key data challenges</h2>
+<ul>
+<li>Rural Midwest has very thin transaction data — comp count may be 0–3 per quarter in many ZIPs</li>
+<li>Assessor data quality varies enormously by county — some are parcel-level API-accessible, others are PDFs</li>
+<li>Eviction court data is publicly available in some states (MN, OH) but not others</li>
+<li>Crime data: FBI UCR is 12–18 months stale; NIBRS transition created reporting gaps</li>
+<li>Rent estimates from Zillow vs. RentCast vs. CoStar can diverge 15–25% in thin Midwest markets</li>
+<li>Insurance claims history is typically proprietary to carriers — hard to model without partnerships</li>
+</ul>
+</section>
+
+<!-- PERSONAS -->
+<section class="section" id="personas">
+<h1>9. User personas</h1>
+<p class="section-intro">Eight distinct investor types who would use this product, with their goals, fears, and priority dashboard modules.</p>
+<div class="card-grid card-grid-2">
+<div class="persona-card"><div class="persona-avatar" style="background:#e6f1fb;color:#185fa5">RS</div><h3>Rachel S. — First-time Midwest SFR investor</h3><p style="font-size:12px;color:var(--color-text-tertiary);margin-bottom:0.5rem">Based in Chicago | $50–150k capital | 1–3 properties</p><ul><li><strong>Goals:</strong> Safe first deal, positive cash flow, learn the market</li><li><strong>Biggest fear:</strong> Surprise capex wiping out savings; overpaying</li><li><strong>What risk means:</strong> Losing her principal and being stuck in a bad deal</li><li><strong>Top modules:</strong> Property screening, simple risk score, capex estimator, neighborhood map</li></ul></div>
+<div class="persona-card"><div class="persona-avatar" style="background:#eaf3de;color:#3b6d11">MK</div><h3>Marcus K. — Small multifamily operator</h3><p style="font-size:12px;color:var(--color-text-tertiary);margin-bottom:0.5rem">Indianapolis | 8–20 units across 3 properties | 10yr experience</p><ul><li><strong>Goals:</strong> Grow to 50 units; optimize hold/sell timing; monitor portfolio</li><li><strong>Biggest fear:</strong> Rising insurance + taxes eroding NOI; bad tenants in C-class areas</li><li><strong>Top modules:</strong> Portfolio monitoring, operating cost analyzer, neighborhood heatmap, hold/sell signal</li></ul></div>
+<div class="persona-card"><div class="persona-avatar" style="background:#faeeda;color:#854f0b">JT</div><h3>Jennifer T. — Out-of-state BRRRR investor</h3><p style="font-size:12px;color:var(--color-text-tertiary);margin-bottom:0.5rem">California | Targeting Columbus, KC, Milwaukee remotely</p><ul><li><strong>Goals:</strong> Deploy $500k capital in Midwest for better yields; refinance to recycle capital</li><li><strong>Biggest fear:</strong> Appraisal gap killing refinance; property manager neglect</li><li><strong>Top modules:</strong> Metro comparison, refinance stress test, regulatory map</li></ul></div>
+<div class="persona-card"><div class="persona-avatar" style="background:#fcebeb;color:#a32d2d">DL</div><h3>David L. — Lender / credit analyst</h3><p style="font-size:12px;color:var(--color-text-tertiary);margin-bottom:0.5rem">Regional bank | Underwrites $5–50M RE loans annually</p><ul><li><strong>Goals:</strong> Underwrite collateral quality; assess market risk of loan book</li><li><strong>Biggest fear:</strong> Non-performing loan in a shrinking market; appraisal error</li><li><strong>Top modules:</strong> Liquidity/exit score, market risk, stress test, comp depth indicator</li></ul></div>
+<div class="persona-card"><div class="persona-avatar" style="background:#f5f5f3;color:#4a4a4a">AP</div><h3>Aisha P. — Acquisitions associate at a fund</h3><p style="font-size:12px;color:var(--color-text-tertiary);margin-bottom:0.5rem">Chicago-based PE fund | Evaluating 50–200 unit MF portfolios</p><ul><li><strong>Goals:</strong> Source and underwrite deals quickly; produce IC memos efficiently</li><li><strong>Biggest fear:</strong> Missing a risk post-close; looking foolish in IC meeting</li><li><strong>Top modules:</strong> Metro comparison, property underwriting, scenario analysis, auto-memo generator</li></ul></div>
+<div class="persona-card"><div class="persona-avatar" style="background:#e6f1fb;color:#185fa5">TN</div><h3>Tom N. — Developer / land buyer</h3><p style="font-size:12px;color:var(--color-text-tertiary);margin-bottom:0.5rem">Evaluating infill development and adaptive reuse in secondary Midwest cities</p><ul><li><strong>Goals:</strong> Identify markets with demand-supply gap; assess entitlement risk; model absorption</li><li><strong>Biggest fear:</strong> Oversupply by delivery; permitting delays; cost overruns</li><li><strong>Top modules:</strong> Supply pipeline, permit tracker, employment growth, demographic forecast</li></ul></div>
+</div>
+<h2>Key use cases</h2>
+<table>
+<thead><tr><th>Use case</th><th>Primary persona</th><th>Modules used</th><th>Output</th></tr></thead>
+<tbody>
+<tr><td>Compare 3 Midwest metros for SFR investment</td><td>Out-of-state investor</td><td>Metro comparison, market overview</td><td>Side-by-side risk/return scorecard</td></tr>
+<tr><td>Screen a property before making an offer</td><td>First-time investor</td><td>Property panel, neighborhood heatmap</td><td>Property risk score + capex estimate + flag list</td></tr>
+<tr><td>Stress test a refinance in 24 months</td><td>BRRRR investor</td><td>Financing stress test</td><td>DSCR at various rate scenarios + comp depth warning</td></tr>
+<tr><td>Identify high-cash-flow traps</td><td>All</td><td>Edge case alerts, affordability score</td><td>Automated flag: "cap rate may not be sustainable"</td></tr>
+<tr><td>Monitor owned assets for rising risk</td><td>Small MF operator</td><td>Portfolio view, watchlist/alerts</td><td>Monthly risk delta report; alert triggers</td></tr>
+<tr><td>Explain a risk score to an LP</td><td>Syndicator</td><td>Explainability panel, scenario output</td><td>Plain-English score breakdown narrative</td></tr>
+<tr><td>Hold, renovate, refinance, or sell?</td><td>Buy-and-hold landlord</td><td>Hold/sell signal, stress test</td><td>Scenario comparison: IRR by decision path</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- MODULES -->
+<section class="section" id="modules">
+<h1>10. Dashboard modules</h1>
+<p class="section-intro">13 proposed modules organized by MVP, V2, and V3 priority.</p>
+<h2>MVP modules (V1)</h2>
+<div class="module-card" style="border-left:3px solid #185FA5"><div class="module-title">Market Overview</div><p style="font-size:13px;color:var(--color-text-secondary)">Single-market deep-dive: employment trend, vacancy, rent growth, permit activity, price-to-rent, affordability stress, liquidity score. Primary chart: rolling 24-month KPI trend lines.</p><div class="module-meta"><span class="tag tag-blue">MVP</span><span class="tag tag-gray">Metro / ZIP level</span><span class="tag tag-gray">Monthly refresh</span></div></div>
+<div class="module-card" style="border-left:3px solid #185FA5"><div class="module-title">Metro Comparison</div><p style="font-size:13px;color:var(--color-text-secondary)">Side-by-side comparison of up to 5 Midwest metros across 10 risk and return dimensions. Spider/radar chart + ranked KPI table. Supports market selection decision.</p><div class="module-meta"><span class="tag tag-blue">MVP</span><span class="tag tag-gray">Metro level</span></div></div>
+<div class="module-card" style="border-left:3px solid #185FA5"><div class="module-title">Property Underwriting Panel</div><p style="font-size:13px;color:var(--color-text-secondary)">Address-level: enter purchase price, rent, expenses, financing terms → outputs DSCR, CoC, cap rate, break-even occupancy, capex-adjusted NOI, tax reassessment risk, CIRS score for property. Most important MVP module.</p><div class="module-meta"><span class="tag tag-blue">MVP</span><span class="tag tag-amber">Property level</span></div></div>
+<div class="module-card" style="border-left:3px solid #185FA5"><div class="module-title">Financing Stress Test</div><p style="font-size:13px;color:var(--color-text-secondary)">Model DSCR and cash flow at +100/200/300bps from current rate. Model refinance scenario at 24/36/60 months. Show DSCR waterfall and break-even occupancy under stress.</p><div class="module-meta"><span class="tag tag-blue">MVP</span><span class="tag tag-red">Risk critical</span></div></div>
+<div class="module-card" style="border-left:3px solid #185FA5"><div class="module-title">Neighborhood Heatmap</div><p style="font-size:13px;color:var(--color-text-secondary)">Census tract choropleth for selected metro: vacancy, distress index, rent-to-income, migration, crime proxy. Toggle layers. Supports property screening and location selection.</p><div class="module-meta"><span class="tag tag-blue">MVP</span><span class="tag tag-gray">Census tract</span></div></div>
+<h2>V2 modules</h2>
+<div class="module-card" style="border-left:3px solid #3B6D11"><div class="module-title">Insurance / Climate Risk Map</div><p style="font-size:13px;color:var(--color-text-secondary)">Overlay: FEMA flood zones, NOAA tornado corridors, hail frequency, freeze-thaw severity index, sewer backup risk. Insurance burden estimator by property type and location.</p><div class="module-meta"><span class="tag tag-green">V2</span><span class="tag tag-gray">Parcel / ZIP</span></div></div>
+<div class="module-card" style="border-left:3px solid #3B6D11"><div class="module-title">Portfolio Concentration View</div><p style="font-size:13px;color:var(--color-text-secondary)">For multi-property investors: HHI concentration by metro, asset type, employer exposure, climate zone. Diversification recommendations. Portfolio-level CIRS.</p><div class="module-meta"><span class="tag tag-green">V2</span><span class="tag tag-gray">Portfolio level</span></div></div>
+<div class="module-card" style="border-left:3px solid #3B6D11"><div class="module-title">Supply Pipeline / Permit Tracker</div><p style="font-size:13px;color:var(--color-text-secondary)">Multi-family permit counts by submarket, projected delivery timeline, absorption rate model, overbuilding risk flag for key corridors.</p><div class="module-meta"><span class="tag tag-green">V2</span><span class="tag tag-gray">Submarket / ZIP</span></div></div>
+<div class="module-card" style="border-left:3px solid #3B6D11"><div class="module-title">Watchlist &amp; Alerts</div><p style="font-size:13px;color:var(--color-text-secondary)">User-defined alerts: WARN Act filings in tracked MSAs, vacancy rate threshold breaches, rent growth drops below threshold, DSCR stress flag, property tax reassessment cycle triggers.</p><div class="module-meta"><span class="tag tag-green">V2</span><span class="tag tag-gray">User-configured</span></div></div>
+<h2>V3 modules</h2>
+<div class="module-card" style="border-left:3px solid #7F77DD"><div class="module-title">Explainability Panel + IC Memo Generator</div><p style="font-size:13px;color:var(--color-text-secondary)">Plain-English breakdown of every factor in CIRS. Auto-generate investment committee memo with risk narrative, scenario outputs, and recommendation.</p><div class="module-meta"><span class="tag tag-gray">V3</span><span class="tag tag-blue">High defensibility</span></div></div>
+<div class="module-card" style="border-left:3px solid #7F77DD"><div class="module-title">Hold/Sell/Refinance Signal</div><p style="font-size:13px;color:var(--color-text-secondary)">For owned assets: integrate current market conditions, asset risk trend, financing cost, and exit liquidity to recommend Hold / Monitor / Sell / Refinance with scenario comparison.</p><div class="module-meta"><span class="tag tag-gray">V3</span><span class="tag tag-amber">High user value</span></div></div>
+<div class="module-card" style="border-left:3px solid #7F77DD"><div class="module-title">Data Confidence &amp; Caveat Panel</div><p style="font-size:13px;color:var(--color-text-secondary)">Every score shows its confidence breakdown: which data is fresh, which is stale, which is missing, what assumptions are being made. Builds trust and prevents misuse.</p><div class="module-meta"><span class="tag tag-gray">V3</span><span class="tag tag-green">Trust critical</span></div></div>
+</section>
+
+<!-- SCENARIOS -->
+<section class="section" id="scenarios">
+<h1>11. Scenario stress tests</h1>
+<p class="section-intro">Pre-built stress scenarios relevant to Midwest investors, with input changes, KPI impacts, and dashboard response triggers.</p>
+<table>
+<thead><tr><th>Scenario</th><th>Input changes</th><th>Primary KPI impacts</th><th>Most exposed investor</th><th>Dashboard trigger</th></tr></thead>
+<tbody>
+<tr><td>Rates higher for longer</td><td>+200bps on refinance; +150bps on cap rates</td><td>DSCR ↓, CoC ↓, exit cap rate ↑, IRR ↓</td><td>Short-term BRRRR, variable-rate holders</td><td>Refinance stress test auto-run; flag properties with &lt;18mo to balloon</td></tr>
+<tr><td>Local recession / job loss spike</td><td>Unemployment +3%; rent growth -2%; vacancy +4%</td><td>DSCR ↓, rent collections ↓, delinquency ↑</td><td>C-class MF, workforce SFR</td><td>Alert: employment leading indicator below threshold</td></tr>
+<tr><td>Major employer exits market</td><td>Top employer share removed; unemployment +5–8%</td><td>Vacancy spike, rent decline, price decline</td><td>Any investor in concentrated-employer market</td><td>WARN Act alert; employer concentration red flag</td></tr>
+<tr><td>Rent growth stalls at 0%</td><td>Rent growth → 0% for 3 years; expense inflation 4%</td><td>CoC ↓, NOI ↓, exit cap rate compression limited</td><td>High-LTV recent acquisitions</td><td>Affordability ceiling alert + NOI sensitivity output</td></tr>
+<tr><td>Insurance premium shock</td><td>Annual premium +40% (hail claim year)</td><td>NOI ↓ 4–8%, break-even occupancy ↑</td><td>All; especially pre-1980 stock</td><td>Insurance burden exceeds 12% threshold flag</td></tr>
+<tr><td>Property tax reassessment</td><td>Assessed value reset to purchase price; taxes +80%</td><td>NOI ↓ 15–25% in IL; DSCR may fall below 1.0</td><td>Illinois buyers especially</td><td>Post-sale reassessment risk warning on all IL properties</td></tr>
+<tr><td>Capex shock in older property</td><td>Foundation/plumbing/electrical emergency: $30–60k</td><td>CoC negative for 1–3 years; IRR drops 200–400bps</td><td>Pre-1960 SFR/MF buyers</td><td>Vintage capex alert + recommended reserve increase</td></tr>
+<tr><td>Severe storm / tornado year</td><td>Insurance claim + deductible + lost rent: $15–50k</td><td>NOI negative year; insurance non-renewal risk</td><td>All in tornado corridor</td><td>Climate hazard score elevated; coverage adequacy check</td></tr>
+<tr><td>Multifamily oversupply in submarket</td><td>Vacancy +6%; concessions 1–2 months free rent</td><td>Effective rent ↓ 10–15%; cap rate expansion</td><td>MF in Columbus, Indy, KC overbuilt corridors</td><td>Supply pipeline warning: delivery-to-absorption ratio flag</td></tr>
+<tr><td>Refinance at worse DSCR / LTV</td><td>Rates +250bps; appraisal 10% below expectation</td><td>Equity trapped; potential cash-in refinance required</td><td>BRRRR investors in thin-comp markets</td><td>Refinance readiness score red; comp depth warning</td></tr>
+<tr><td>Regulatory tightening in city</td><td>Just-cause eviction enacted; rent stabilization proposed</td><td>Eviction timeline + 60–90 days; NOI uncertainty ↑</td><td>MF operators in Minneapolis, Chicago</td><td>Regulatory environment alert for tracked cities</td></tr>
+<tr><td>College enrollment shock</td><td>Enrollment -20%; online shift accelerates</td><td>STR revenue -30–40%; SFR vacancy spike near campus</td><td>Student-housing operators, STR investors</td><td>College-town dependency flag + enrollment trend alert</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ADVANCED IDEAS -->
+<section class="section" id="advanced">
+<h1>12. Advanced product ideas</h1>
+<p class="section-intro">High-value improvements ranked by user value, technical feasibility, and defensibility.</p>
+<table>
+<thead><tr><th>Feature idea</th><th>User value</th><th>Feasibility</th><th>Defensibility</th><th>Phase</th></tr></thead>
+<tbody>
+<tr><td>Explainable scoring (no black box)</td><td><span class="badge badge-crit">Very High</span></td><td>High</td><td>High — rare in RE data</td><td>MVP</td></tr>
+<tr><td>Property tax shock estimator</td><td><span class="badge badge-crit">Very High</span></td><td>High</td><td>Very High — unique to Midwest</td><td>MVP</td></tr>
+<tr><td>Vintage-adjusted Midwest capex model</td><td><span class="badge badge-crit">Very High</span></td><td>Medium</td><td>Very High — proprietary model</td><td>MVP/V2</td></tr>
+<tr><td>What changed since last month (risk deltas)</td><td><span class="badge badge-high">High</span></td><td>High</td><td>Medium</td><td>V2</td></tr>
+<tr><td>Refinance readiness score</td><td><span class="badge badge-high">High</span></td><td>Medium</td><td>High</td><td>V2</td></tr>
+<tr><td>Automated IC memo generator</td><td><span class="badge badge-high">High</span></td><td>Medium (AI-powered)</td><td>High</td><td>V2/V3</td></tr>
+<tr><td>Employer concentration early warning (WARN Act)</td><td><span class="badge badge-high">High</span></td><td>High (public data)</td><td>High — real-time</td><td>V2</td></tr>
+<tr><td>Portfolio diversification recommendations</td><td><span class="badge badge-med">Medium</span></td><td>Medium</td><td>Medium</td><td>V3</td></tr>
+<tr><td>User-adjustable score weights</td><td><span class="badge badge-high">High</span></td><td>High</td><td>Medium</td><td>V2</td></tr>
+<tr><td>Agentic risk assistant (plain-English Q&amp;A on any property)</td><td><span class="badge badge-high">High</span></td><td>Medium (LLM-powered)</td><td>High — differentiated UX</td><td>V3</td></tr>
+<tr><td>Insurance quote integration (API to carrier)</td><td><span class="badge badge-high">High</span></td><td>Low (partnership needed)</td><td>Very High</td><td>V3</td></tr>
+<tr><td>Confidence intervals on all forecasts</td><td><span class="badge badge-high">High</span></td><td>Medium</td><td>High — rare in RE tools</td><td>V2</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- LIMITATIONS -->
+<section class="section" id="limitations">
+<h1>13. Limitations and ethical considerations</h1>
+<p class="section-intro">A product that deals with risk scoring, neighborhood data, and automated recommendations carries real responsibility.</p>
+<div class="callout callout-danger"><p>Risk scores are screening tools, not investment decisions. They should support human judgment, not replace it.</p></div>
+<h2>Data limitations</h2>
+<ul>
+<li>All public data is lagged. ACS data is 1–2 years behind reality. Neighborhood conditions can change rapidly in that window.</li>
+<li>Rent estimates from commercial vendors can diverge 15–25% from actual market rents in thin Midwest markets.</li>
+<li>Rural and secondary Midwest markets have severely limited transaction data — any score based on fewer than 10 annual transactions should be flagged as low-confidence.</li>
+<li>Insurance cost estimates are indicative only. Actual premiums depend on loss history, carrier availability, and inspection findings.</li>
+<li>Climate models are improving but are imperfect, particularly for high-frequency events like freeze-thaw and sewer backup.</li>
+</ul>
+<h2>Bias and fairness risks</h2>
+<div class="callout callout-warn"><p>Neighborhood scoring using crime data, school ratings, and distress indices can encode historical patterns of racial and economic segregation. This must be addressed in product design.</p></div>
+<ul>
+<li>Crime and school data should not be used as direct scoring inputs without careful review — they often correlate with race and income in ways that can perpetuate discriminatory patterns.</li>
+<li>Consider framing neighborhood risk inputs as: vacancy trend, foreclosure rate, permit activity, and employment accessibility rather than crime/school ratings.</li>
+<li>Never allow the product to be used for Fair Housing Act-covered screening — ensure disclaimers are explicit.</li>
+<li>Third-party AVM data can encode historical valuation bias — be transparent about AVM sources and limitations.</li>
+</ul>
+<h2>Recommended guardrails</h2>
+<ul>
+<li>Every score must show its constituent factors (explainability first)</li>
+<li>Confidence score prominently displayed alongside every risk score</li>
+<li>Data vintage labeled on every indicator</li>
+<li>Manual override capability on all user-entered assumptions</li>
+<li>Clear disclaimers: not investment advice, not a substitute for professional due diligence</li>
+<li>Audit trail: log every score version with its inputs so users can see what changed</li>
+<li>Methodology documentation publicly available</li>
+</ul>
+</section>
+
+<!-- MVP -->
+<section class="section" id="mvp">
+<h1>14. MVP recommendation</h1>
+<p class="section-intro">Focused MVP targeting the highest-value use case with the most tractable data.</p>
+<div class="callout"><p>Target persona for MVP: The buy-and-hold SFR and small multifamily investor with 1–10 properties, actively seeking or evaluating acquisitions in 2–4 Midwest metros.</p></div>
+<div class="roadmap-phase phase-mvp">
+<div class="phase-header">MVP — Must have (3–4 months to build)</div>
+<div class="card-grid card-grid-2">
+<div><h3 style="font-size:14px;margin-bottom:0.5rem">Core product</h3><ul><li>Property underwriting panel (address lookup → CIRS)</li><li>Metro comparison (5 launch markets: Chicago, Columbus, Indianapolis, Kansas City, Milwaukee)</li><li>Financing stress test (DSCR at rate scenarios)</li><li>Neighborhood heatmap (public data: vacancy, distress, migration)</li><li>Composite Investor Risk Score with explainability panel</li><li>Property tax reassessment risk warning</li><li>Vintage-adjusted capex reserve estimator</li></ul></div>
+<div><h3 style="font-size:14px;margin-bottom:0.5rem">Data for MVP</h3><ul><li>FRED, BLS, Census ACS (free)</li><li>FHFA HPI (free)</li><li>FEMA flood data (free)</li><li>County assessor data (free, requires scraping/API by county)</li><li>ATTOM basic API (parcel + tax + AVM) — key paid investment</li><li>RentCast or Zillow API for rent estimates</li><li>NOAA weather data (free)</li></ul></div>
+</div>
+</div>
+<div class="roadmap-phase phase-v2">
+<div class="phase-header">V2 — Should have (months 5–9)</div>
+<ul><li>Portfolio monitoring + watchlist alerts</li><li>Supply pipeline / permit tracker</li><li>WARN Act employer concentration alerts</li><li>Insurance / climate risk map overlay</li><li>User-adjustable score weights</li><li>Risk delta tracking (what changed this month)</li><li>Refinance readiness score</li><li>Expand to 10–15 Midwest metros</li><li>Add CoreLogic or BuildFax for better property condition data</li></ul>
+</div>
+<div class="roadmap-phase phase-v3">
+<div class="phase-header">V3 — Nice to have (months 10–18)</div>
+<ul><li>IC memo auto-generator (AI-powered)</li><li>Agentic risk assistant</li><li>Insurance quote integration</li><li>Portfolio diversification optimizer</li><li>Commercial asset classes (office, retail, industrial)</li><li>STR / AirDNA integration</li><li>Full national expansion with Midwest-calibrated models</li><li>API access for institutional clients and lenders</li></ul>
+</div>
+<h2>Simple vs advanced scoring in V1</h2>
+<table>
+<thead><tr><th>Component</th><th>V1 approach</th><th>Why simple is fine</th></tr></thead>
+<tbody>
+<tr><td>Cap rate / DSCR</td><td>Simple formula, user inputs</td><td>Math is simple; user assumptions are what matters</td></tr>
+<tr><td>Capex reserve</td><td>Rule-based by build decade and property type</td><td>Better than nothing; investor survey can calibrate</td></tr>
+<tr><td>Climate score</td><td>NOAA frequency × FEMA zone lookup</td><td>Good enough for V1; First Street can enhance in V2</td></tr>
+<tr><td>Employer concentration</td><td>HHI from BLS QCEW top employers</td><td>Public data + simple formula is strong signal</td></tr>
+<tr><td>Exit liquidity</td><td>Transaction count + DOM from ATTOM</td><td>Simple ratio captures most of the signal</td></tr>
+<tr><td>Composite CIRS</td><td>Weighted average of 8 category scores</td><td>Explainability &gt; model complexity in V1</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- DELIVERABLES -->
+<section class="section" id="deliverables">
+<h1>15. Final deliverables</h1>
+<p class="section-intro">Summary outputs: taxonomy, scoring pseudocode, feature roadmap, and research backlog.</p>
+<h2>A. Risk taxonomy</h2>
+<div class="card">
+<div class="formula">CIRS — Composite Investor Risk Score
+├── 1. Macroeconomic risk (15%)
+│   ├── Interest rate environment
+│   ├── Credit cycle stage
+│   └── National CRE cap rate spread
+├── 2. Local economic risk (20%)
+│   ├── Employment rate and trend
+│   ├── Wage growth
+│   ├── Employer concentration (HHI)
+│   ├── Net migration
+│   └── WARN Act activity
+├── 3. Housing market risk (15%)
+│   ├── Supply/demand balance
+│   ├── Price trend
+│   ├── Affordability stress
+│   └── Overbuilding risk
+├── 4. Property risk (15%)
+│   ├── Build year / vintage risk
+│   ├── Capex reserve adequacy
+│   ├── Physical condition indicators
+│   └── Code violation history
+├── 5. Neighborhood risk (shown separately)
+│   ├── Vacancy and distress index
+│   ├── Foreclosure rate trend
+│   └── Migration/demographic trend
+├── 6. Financing risk (12%)
+│   ├── Current DSCR
+│   ├── LTV and equity cushion
+│   ├── Refinance risk (comp depth × rate sensitivity)
+│   └── Appraisal gap history
+├── 7. Climate / insurance risk (8%)
+│   ├── Freeze-thaw frequency score
+│   ├── Tornado / hail corridor risk
+│   ├── Flood zone designation
+│   └── Insurance burden trend
+├── 8. Legal / regulatory risk (7%)
+│   ├── Eviction timeline index
+│   ├── Rent control exposure
+│   └── Property tax reassessment risk
+└── 9. Liquidity / exit risk (8%)
+    ├── Transaction volume trend
+    ├── Days on market trend
+    └── Investor buyer share</div>
+</div>
+<h2>B. Mock CIRS scoring pseudocode</h2>
+<div class="formula">function compute_cirs(property_id, user_assumptions, scenario="baseline"):
+
+  macro     = get_macro_indicators()
+  local     = get_local_economic(metro_id)
+  market    = get_housing_market(zip_code)
+  prop      = get_property_data(property_id)
+  finance   = compute_financing_risk(user_assumptions, market)
+  climate   = get_climate_score(property_id)
+  legal     = get_regulatory_score(city_id)
+  liquidity = get_liquidity_score(zip_code)
+
+  scores = {
+    macro:     score_macro(macro),          # weight 0.15
+    local:     score_local(local),          # weight 0.20
+    market:    score_market(market),        # weight 0.15
+    property:  score_property(prop),        # weight 0.15
+    financing: score_financing(finance),    # weight 0.12
+    climate:   score_climate(climate),      # weight 0.08
+    legal:     score_legal(legal),          # weight 0.07
+    liquidity: score_liquidity(liquidity)   # weight 0.08
+  }
+
+  conf       = compute_confidence(prop, market, data_freshness)
+  multiplier = scenario_multipliers[scenario]  # 1.0 / 1.25 / 1.75
+  raw_score  = sum(score * weight for score, weight in scores)
+  cirs       = raw_score * conf * multiplier
+
+  return {
+    cirs:                round(cirs, 1),
+    confidence:          round(conf, 2),
+    category_breakdown:  scores,
+    flags:               generate_flags(scores, prop, market),
+    scenario:            scenario
+  }</div>
+<h2>C. Feature roadmap</h2>
+<table>
+<thead><tr><th>Feature</th><th>Phase</th><th>Data needed</th><th>Persona</th></tr></thead>
+<tbody>
+<tr><td>Property underwriting panel + CIRS</td><td>MVP</td><td>ATTOM + FRED + BLS + assessor</td><td>All</td></tr>
+<tr><td>Metro comparison (5 markets)</td><td>MVP</td><td>Public + ATTOM</td><td>All</td></tr>
+<tr><td>Financing stress test</td><td>MVP</td><td>User inputs + FRED rates</td><td>BRRRR, buy-hold</td></tr>
+<tr><td>Neighborhood heatmap</td><td>MVP</td><td>ACS + HUD + ATTOM</td><td>All</td></tr>
+<tr><td>Tax reassessment shock estimator</td><td>MVP</td><td>County assessor</td><td>All IL investors</td></tr>
+<tr><td>Vintage capex model</td><td>MVP</td><td>ATTOM build year + labor data</td><td>SFR/MF buyers</td></tr>
+<tr><td>Portfolio monitoring + alerts</td><td>V2</td><td>All above + WARN Act</td><td>Operators, funds</td></tr>
+<tr><td>Insurance/climate map</td><td>V2</td><td>NOAA + FEMA + First Street</td><td>All</td></tr>
+<tr><td>Supply pipeline tracker</td><td>V2</td><td>Census permits + CoStar</td><td>MF investors, developers</td></tr>
+<tr><td>IC memo generator</td><td>V3</td><td>All data + LLM</td><td>Funds, syndicators</td></tr>
+<tr><td>Agentic risk assistant</td><td>V3</td><td>All data + LLM</td><td>All</td></tr>
+<tr><td>Insurance quote integration</td><td>V3</td><td>Carrier API partnerships</td><td>All</td></tr>
+</tbody>
+</table>
+<h2>D. Research backlog</h2>
+<ul>
+<li>Validate capex reserve model against actual investor capex data (survey needed)</li>
+<li>Quantify appraisal gap frequency and magnitude by Midwest ZIP comp depth band</li>
+<li>Map eviction court timeline data across all 12 states (public records research)</li>
+<li>Audit assessor API availability for each of 12 states + major counties</li>
+<li>Test rent estimate accuracy (Zillow vs. RentCast vs. CoStar) in secondary Midwest markets</li>
+<li>Research insurance loss ratio data by county for Midwest-specific climate events</li>
+<li>Validate employer concentration HHI model against actual job loss event outcomes</li>
+<li>User research: 20 interviews with Midwest RE investors on risk perception and tool gaps</li>
+<li>Evaluate ATTOM vs. CoreLogic for V1 property data cost/accuracy tradeoff</li>
+<li>Assess First Street API pricing and Midwest climate data quality</li>
+<li>Evaluate BuildFax/Verisk for permit history completeness in target markets</li>
+<li>Legal review: Fair Housing Act compliance requirements for neighborhood scoring</li>
+</ul>
+<h2>E. Dashboard wireframe ideas</h2>
+<div class="card"><h3>Main dashboard — property view</h3><ul><li>Top: address search bar + property photo (from Google Street View API)</li><li>Left panel: CIRS dial (0–100) + confidence badge + scenario toggle (baseline/stress)</li><li>Center: Category breakdown bar chart (8 categories, color-coded by severity)</li><li>Right panel: Top 3 risk flags with plain-English descriptions</li><li>Below fold: KPI grid (cap rate, DSCR, CoC, break-even occ, tax burden, insurance burden)</li><li>Below fold: Underwriting assumptions panel (editable inputs)</li><li>Below fold: Neighborhood heatmap tile + financing stress test chart</li></ul></div>
+<div class="card"><h3>Metro comparison view</h3><ul><li>Selector: up to 5 metros side by side</li><li>Radar chart: 8 risk dimensions per metro</li><li>Table: ranked KPIs with color coding (green/amber/red vs. Midwest benchmarks)</li><li>Below: narrative summary per metro generated from scores</li></ul></div>
+<div class="card"><h3>Portfolio view</h3><ul><li>Asset list with individual CIRS scores and trend arrows (improving/worsening)</li><li>Map showing all assets colored by CIRS tier</li><li>Portfolio-level concentration chart: HHI by metro, asset type, employer exposure</li><li>Alerts panel: active watchlist triggers and recommended actions</li></ul></div>
+</section>
+
+</main>
+</div>
+
+<script>
+const links = document.querySelectorAll('.nav a');
+const sections = document.querySelectorAll('.section');
+links.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const sec = link.dataset.sec;
+    links.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    sections.forEach(s => { s.classList.toggle('active', s.id === sec); });
+    window.scrollTo(0, 0);
+    document.querySelector('.nav').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
