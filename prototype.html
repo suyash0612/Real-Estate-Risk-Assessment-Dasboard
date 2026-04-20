@@ -103,12 +103,14 @@ main { padding-top: 56px; }
   position: absolute; inset: 0; opacity: 0.04;
   background-image: linear-gradient(var(--gold) 1px, transparent 1px), linear-gradient(90deg, var(--gold) 1px, transparent 1px);
   background-size: 48px 48px;
+  pointer-events: none;
 }
 
 .hero-orb {
   position: absolute; width: 600px; height: 600px; border-radius: 50%;
   background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
   top: 50%; left: 50%; transform: translate(-50%,-50%);
+  pointer-events: none;
 }
 
 .hero-eyebrow {
@@ -418,6 +420,7 @@ input[type=range]::-webkit-slider-thumb {
     <button class="nav-tab" onclick="showPage('underwriter')">Underwriter</button>
     <button class="nav-tab" onclick="showPage('stress')">Stress Test</button>
     <button class="nav-tab" onclick="showPage('personas')">Personas</button>
+    <button class="nav-tab" onclick="showPage('docs')">Help & Docs</button>
   </div>
   <div class="nav-badge">Champaign County · IL</div>
 </nav>
@@ -712,6 +715,206 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 </div>
 
+<!-- DOCUMENTATION PAGE -->
+<div class="page" id="page-docs">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">Help & Documentation</div>
+      <div class="section-title">How to use the Champaign RE Risk Platform</div>
+      <div class="section-sub">Learn about all the features, how to use them, and the real estate terminology we use.</div>
+    </div>
+
+    <!-- FEATURES SECTION -->
+    <div style="margin-bottom:3rem;">
+      <h3 style="font-family:var(--font-display);font-size:20px;color:var(--text);margin-bottom:1.5rem;">Platform Features</h3>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem;">
+        <!-- Feature 1: Investor Quiz -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+            <div style="width:44px;height:44px;border-radius:8px;background:var(--gold-dim);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            </div>
+            <div>
+              <div style="font-size:15px;font-weight:600;color:var(--text);">Investor Quiz</div>
+              <div style="font-size:12px;color:var(--muted);">Identify your investor type</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:1rem;">
+            Answer 6 quick questions about your investment goals, capital, experience, and risk tolerance to identify which of the 8 investor personas best matches your profile.
+          </div>
+          <div style="background:rgba(201,168,76,0.1);border-left:3px solid var(--gold);padding:1rem;border-radius:0 6px 6px 0;margin-bottom:1rem;">
+            <div style="font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px;">How to use:</div>
+            <ul style="margin:0;padding-left:1.25rem;font-size:12px;color:var(--muted);">
+              <li>Click "Investor Quiz" tab</li>
+              <li>Answer each question honestly</li>
+              <li>View your personalized profile and risk input checklist</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Feature 2: Property Underwriter -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+            <div style="width:44px;height:44px;border-radius:8px;background:var(--teal-dim);border:1px solid rgba(45,212,191,0.2);display:flex;align-items:center;justify-content:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+            </div>
+            <div>
+              <div style="font-size:15px;font-weight:600;color:var(--text);">Property Underwriter</div>
+              <div style="font-size:12px;color:var(--muted);">Analyze any property</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:1rem;">
+            Enter any Champaign County property details and get instant calculations for risk score, cash flow, cap rate, DSCR, and cash-on-cash return.
+          </div>
+          <div style="background:rgba(45,212,191,0.08);border-left:3px solid var(--teal);padding:1rem;border-radius:0 6px 6px 0;margin-bottom:1rem;">
+            <div style="font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px;">How to use:</div>
+            <ul style="margin:0;padding-left:1.25rem;font-size:12px;color:var(--muted);">
+              <li>Enter property purchase price and rental income</li>
+              <li>Update financing, HOA, and vacancy assumptions</li>
+              <li>View real-time metrics and risk assessment</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Feature 3: Stress Test -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+            <div style="width:44px;height:44px;border-radius:8px;background:var(--red-dim);border:1px solid rgba(248,113,113,0.2);display:flex;align-items:center;justify-content:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div>
+              <div style="font-size:15px;font-weight:600;color:var(--text);">Stress Test</div>
+              <div style="font-size:12px;color:var(--muted);">Model adverse scenarios</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:1rem;">
+            See how your investment holds up under stress. Model vacancy spikes, rent drops, and interest rate changes to find your break-even point.
+          </div>
+          <div style="background:rgba(248,113,113,0.08);border-left:3px solid var(--red);padding:1rem;border-radius:0 6px 6px 0;margin-bottom:1rem;">
+            <div style="font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px;">How to use:</div>
+            <ul style="margin:0;padding-left:1.25rem;font-size:12px;color:var(--muted);">
+              <li>Start from the Underwriter page</li>
+              <li>Adjust vacancy % and rent decrease scenarios</li>
+              <li>See cash flow impact at various stress levels</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Feature 4: Investor Personas -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+            <div style="width:44px;height:44px;border-radius:8px;background:var(--gold-dim);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <div style="font-size:15px;font-weight:600;color:var(--text);">Investor Personas</div>
+              <div style="font-size:12px;color:var(--muted);">Learn about 8 investor types</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:1rem;">
+            Understand the 8 different investor types we profile: Buy-and-hold, First-time, BRRRR, Flippers, Syndicators, PE, Lenders, and Developers.
+          </div>
+          <div style="background:rgba(201,168,76,0.1);border-left:3px solid var(--gold);padding:1rem;border-radius:0 6px 6px 0;margin-bottom:1rem;">
+            <div style="font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px;">How to use:</div>
+            <ul style="margin:0;padding-left:1.25rem;font-size:12px;color:var(--muted);">
+              <li>Click any persona card to expand</li>
+              <li>Review key inputs and risk factors for each type</li>
+              <li>Compare how different investor strategies approach the same property</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REAL ESTATE JARGON SECTION -->
+    <div style="margin-bottom:3rem;">
+      <h3 style="font-family:var(--font-display);font-size:20px;color:var(--text);margin-bottom:1.5rem;">Real Estate & Investment Terminology</h3>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+        <!-- Jargon Cards -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">Cap Rate</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Capitalization Rate</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">Annual net income divided by property value. Shows return on investment. Higher cap rates indicate higher income relative to property price, often in riskier markets.</div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--teal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">DSCR</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Debt Service Coverage Ratio</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">Net operating income divided by annual debt payment. Shows ability to cover loan payments. DSCR > 1.25 is typically required by lenders; below 1.0 means negative cash flow.</div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">Cash-on-Cash Return</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Annual cash flow / down payment</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">The percentage return on the actual cash you put down. If you put $20k down and earn $2k/year, your CoC is 10%.</div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--teal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">ARV</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">After-Repair Value</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">The estimated market value of a property after renovations. Critical for BRRRR and fix-and-flip strategies. Must be backed by comparable sales.</div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--red);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">BRRRR</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Buy, Rehab, Rent, Refinance, Repeat</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">A real estate investment strategy where you buy below-market properties, improve them, rent them out, refinance at higher value, and repeat.</div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">LTV</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Loan-to-Value Ratio</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">The loan amount divided by property value. A 20% down payment = 80% LTV. Lower LTV = less risk for lender and you have more equity cushion.</div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">NOI</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Net Operating Income</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">Rental income minus all operating expenses (taxes, insurance, maintenance, property management). Excludes mortgage principal and income taxes.</div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--teal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">HHI Index</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Herfindahl-Hirschman Index</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">Measures economic concentration by employer. High HHI means one or few employers dominate, increasing regional economic risk.</div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">Vacancy Rate</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">% of units unoccupied / not generating rent</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">Measures rental market tightness. 5% is healthy; 10%+ is stressed. We stress-test your cash flow at 15%, 20%, 25% vacancy levels.</div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--red);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">CoC Return</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Cash-on-Cash Return (annual %)</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">Annual net cash flow divided by total cash invested (down payment + closing + reserves). Real measure of investor's actual return.</div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">Capex Reserve</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Capital Expenditure Reserve Fund</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">Money set aside for major repairs (roof, HVAC, foundation). Rule of thumb: 10-20% of annual rent. We flag if your reserve is insufficient.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIPS SECTION -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;">
+      <h3 style="font-family:var(--font-display);font-size:18px;color:var(--text);margin-bottom:1rem;">Pro Tips for Using This Platform</h3>
+      <ul style="margin:0;padding-left:1.25rem;">
+        <li style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:1rem;"><strong style="color:var(--text);">Start with the Quiz:</strong> Your investor type shapes which metrics matter most. A BRRRR investor cares about ARV and refi potential; a buy-and-hold cares about DSCR.</li>
+        <li style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:1rem;"><strong style="color:var(--text);">Use the Underwriter for Comparison:</strong> Analyze multiple properties side-by-side to understand how location, price, and condition affect returns.</li>
+        <li style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:1rem;"><strong style="color:var(--text);">Stress Test Conservatively:</strong> Don't just model base-case scenarios. Test what happens if vacancy hits 20%, rent drops 10%, or rates jump 2%.</li>
+        <li style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:0;"><strong style="color:var(--text);">Review Your Persona's Checklist:</strong> Each investor type has a custom input checklist. Use it as a due-diligence checklist before making an offer.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
 </main>
 
 <script>
@@ -721,7 +924,7 @@ function showPage(id) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   const tabs = document.querySelectorAll('.nav-tab');
-  const pageMap = { home: 0, quiz: 1, underwriter: 2, stress: 3, personas: 4 };
+  const pageMap = { home: 0, quiz: 1, underwriter: 2, stress: 3, personas: 4, docs: 5 };
   if (tabs[pageMap[id]]) tabs[pageMap[id]].classList.add('active');
   window.scrollTo(0, 0);
   if (id === 'quiz') initQuiz();
