@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Champaign RE Risk Platform — Garret Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #0d0f14;
+  --surface: #161923;
+  --surface2: #1e2330;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --gold: #c9a84c;
+  --gold-light: #e8c96a;
+  --gold-dim: rgba(201,168,76,0.15);
+  --teal: #2dd4bf;
+  --teal-dim: rgba(45,212,191,0.1);
+  --red: #f87171;
+  --red-dim: rgba(248,113,113,0.1);
+  --green: #4ade80;
+  --green-dim: rgba(74,222,128,0.1);
+  --amber: #fbbf24;
+  --text: #f0f0ee;
+  --muted: #8a8f9e;
+  --faint: #3a3f50;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(13,15,20,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem;
+  height: 56px;
+}
+
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-logo {
+  width: 28px; height: 28px;
+  border: 1.5px solid var(--gold);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 10px; color: var(--gold); font-weight: 500;
+}
+.nav-title { font-family: var(--font-display); font-size: 16px; color: var(--text); }
+.nav-sub { font-size: 11px; color: var(--muted); margin-left: 4px; }
+
+.nav-tabs { display: flex; gap: 2px; }
+.nav-tab {
+  padding: 6px 14px; border-radius: 6px; font-size: 13px; color: var(--muted);
+  cursor: pointer; transition: all .2s; border: none; background: none; font-family: var(--font-body);
+}
+.nav-tab:hover { color: var(--text); background: var(--surface2); }
+.nav-tab.active { color: var(--gold); background: var(--gold-dim); }
+
+.nav-badge {
+  font-size: 10px; font-family: var(--font-mono);
+  padding: 3px 8px; border-radius: 4px;
+  background: var(--gold-dim); color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.3);
+}
+
+/* MAIN */
+main { padding-top: 56px; }
+
+.page { display: none; animation: fadeIn .3s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+
+/* HERO / LANDING */
+.hero {
+  min-height: calc(100vh - 56px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 4rem 2rem;
+  position: relative; overflow: hidden;
+}
+
+.hero-grid {
+  position: absolute; inset: 0; opacity: 0.04;
+  background-image: linear-gradient(var(--gold) 1px, transparent 1px), linear-gradient(90deg, var(--gold) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.hero-orb {
+  position: absolute; width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono); font-size: 11px; color: var(--gold);
+  letter-spacing: .12em; text-transform: uppercase; margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; display: block; width: 32px; height: 1px; background: var(--gold); opacity: .5;
+}
+
+.hero-h1 {
+  font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.1; color: var(--text); margin-bottom: 1.5rem;
+  max-width: 800px;
+}
+.hero-h1 em { font-style: italic; color: var(--gold); }
+
+.hero-p {
+  font-size: 16px; color: var(--muted); max-width: 540px; margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+
+.hero-cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.btn-primary {
+  padding: 12px 28px; border-radius: var(--radius-sm);
+  background: var(--gold); color: #0d0f14; font-weight: 600; font-size: 14px;
+  border: none; cursor: pointer; font-family: var(--font-body);
+  transition: all .2s; letter-spacing: .02em;
+}
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+.btn-outline {
+  padding: 12px 28px; border-radius: var(--radius-sm);
+  background: transparent; color: var(--text); font-size: 14px;
+  border: 1px solid var(--border2); cursor: pointer; font-family: var(--font-body);
+  transition: all .2s;
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+.hero-stats {
+  display: flex; gap: 2rem; margin-top: 4rem;
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+}
+.hero-stat { text-align: center; }
+.hero-stat-num { font-family: var(--font-display); font-size: 2rem; color: var(--gold); }
+.hero-stat-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+
+/* SECTION LAYOUT */
+.section { padding: 3rem 2rem; max-width: 1100px; margin: 0 auto; }
+.section-header { margin-bottom: 2rem; }
+.section-eyebrow {
+  font-family: var(--font-mono); font-size: 10px; color: var(--gold);
+  text-transform: uppercase; letter-spacing: .12em; margin-bottom: 6px;
+}
+.section-title { font-family: var(--font-display); font-size: 2rem; color: var(--text); }
+.section-sub { color: var(--muted); margin-top: 4px; }
+
+/* CARD */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem;
+}
+.card-sm { padding: 1rem 1.25rem; border-radius: var(--radius-sm); }
+
+/* QUIZ PAGE */
+.quiz-wrap { max-width: 680px; margin: 0 auto; padding: 3rem 2rem; }
+.progress-track { height: 3px; background: var(--faint); border-radius: 2px; margin-bottom: 2.5rem; }
+.progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width .4s ease; }
+
+.q-number { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+.q-text { font-family: var(--font-display); font-size: 1.8rem; color: var(--text); margin-bottom: .5rem; line-height: 1.2; }
+.q-sub { color: var(--muted); font-size: 13px; margin-bottom: 1.75rem; }
+
+.q-opt {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 18px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); cursor: pointer;
+  margin-bottom: 10px; transition: all .2s;
+  background: var(--surface);
+}
+.q-opt:hover { border-color: var(--gold); background: var(--gold-dim); }
+.q-opt.sel { border-color: var(--gold); background: var(--gold-dim); }
+.q-opt.sel .opt-key { background: var(--gold); color: #0d0f14; border-color: var(--gold); }
+
+.opt-key {
+  width: 26px; height: 26px; border-radius: 6px; flex-shrink: 0;
+  border: 1px solid var(--faint); display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+  margin-top: 1px; transition: all .2s;
+}
+.opt-body {}
+.opt-main { font-size: 14px; color: var(--text); font-weight: 500; }
+.opt-hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.q-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem; }
+.btn-ghost {
+  padding: 10px 20px; border-radius: var(--radius-sm);
+  background: transparent; color: var(--muted); font-size: 13px;
+  border: 1px solid var(--border2); cursor: pointer; font-family: var(--font-body);
+  transition: all .2s;
+}
+.btn-ghost:hover:not(:disabled) { color: var(--text); border-color: var(--faint); }
+.btn-ghost:disabled { opacity: .3; cursor: default; }
+.btn-gold {
+  padding: 10px 24px; border-radius: var(--radius-sm);
+  background: var(--gold); color: #0d0f14; font-weight: 600; font-size: 13px;
+  border: none; cursor: pointer; font-family: var(--font-body); transition: all .2s;
+}
+.btn-gold:disabled { opacity: .35; cursor: default; }
+.btn-gold:hover:not(:disabled) { background: var(--gold-light); }
+
+/* RESULT */
+.result-wrap { max-width: 820px; margin: 0 auto; padding: 3rem 2rem; }
+.result-hero { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; }
+.result-avatar {
+  width: 72px; height: 72px; border-radius: 50%;
+  border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 1.4rem; color: var(--gold);
+  background: var(--gold-dim); flex-shrink: 0;
+}
+.result-name { font-family: var(--font-display); font-size: 2rem; color: var(--text); }
+.result-tag { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.match-pct {
+  font-family: var(--font-mono); font-size: 2.5rem; color: var(--gold);
+  margin-left: auto;
+}
+.match-lbl { font-size: 10px; color: var(--muted); text-align: right; }
+
+.inputs-section { margin: 1.5rem 0; }
+.inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.inp-group label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .04em; }
+.inp-group input, .inp-group select {
+  width: 100%; background: var(--bg); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 9px 12px;
+  color: var(--text); font-family: var(--font-body); font-size: 13px;
+  outline: none; transition: border .2s;
+}
+.inp-group input:focus, .inp-group select:focus { border-color: var(--gold); }
+.inp-group select option { background: var(--surface2); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chip {
+  font-size: 11px; padding: 3px 10px; border-radius: 20px;
+  background: var(--surface2); color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.score-bar-wrap { margin-bottom: 8px; }
+.score-bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+.score-bar-label span:first-child { color: var(--muted); }
+.score-bar-label span:last-child { font-family: var(--font-mono); color: var(--text); font-size: 11px; }
+.score-bar-bg { height: 4px; background: var(--faint); border-radius: 2px; }
+.score-bar-fill { height: 100%; border-radius: 2px; background: var(--gold); transition: width .6s ease; }
+
+/* UNDERWRITER PAGE */
+.uw-layout { display: grid; grid-template-columns: 380px 1fr; gap: 1.5rem; align-items: start; }
+.uw-inputs {}
+.uw-results {}
+
+.input-block { margin-bottom: 1rem; }
+.input-block label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .04em; }
+.input-block input, .input-block select {
+  width: 100%; background: var(--bg); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 9px 12px;
+  color: var(--text); font-family: var(--font-body); font-size: 13px;
+  outline: none; transition: border .2s;
+}
+.input-block input:focus { border-color: var(--gold); }
+
+.slider-block { margin-bottom: 1rem; }
+.slider-block label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 6px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .04em; }
+.slider-block label span { color: var(--gold); font-size: 12px; }
+input[type=range] {
+  width: 100%; appearance: none; height: 3px;
+  background: var(--faint); border-radius: 2px; outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  appearance: none; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--gold); cursor: pointer;
+  box-shadow: 0 0 0 3px var(--gold-dim);
+}
+
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+.kpi {
+  background: var(--surface2); border-radius: var(--radius-sm);
+  padding: 14px; border: 1px solid var(--border);
+}
+.kpi-label { font-size: 10px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+.kpi-val { font-family: var(--font-display); font-size: 1.5rem; }
+.kpi-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.kpi.good .kpi-val { color: var(--green); }
+.kpi.warn .kpi-val { color: var(--amber); }
+.kpi.bad .kpi-val { color: var(--red); }
+.kpi.neutral .kpi-val { color: var(--text); }
+.kpi.gold .kpi-val { color: var(--gold); }
+
+.chart-wrap { position: relative; height: 200px; margin: 1rem 0; }
+
+.risk-meter { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--surface2); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 1rem; }
+.risk-score-big { font-family: var(--font-display); font-size: 3rem; line-height: 1; }
+.risk-score-info {}
+.risk-label-big { font-size: 13px; font-weight: 600; }
+.risk-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.verdict-box {
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  background: var(--green-dim); border: 1px solid rgba(74,222,128,0.2);
+  font-size: 13px; color: var(--text); line-height: 1.6;
+}
+.verdict-box.warn { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.2); }
+.verdict-box.bad { background: var(--red-dim); border-color: rgba(248,113,113,0.2); }
+
+/* STRESS TEST */
+.st-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.scenario-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.scenario-table th { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; font-weight: 400; }
+.scenario-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.scenario-table tr:last-child td { border-bottom: none; }
+.scenario-table tr:hover td { background: var(--surface2); }
+.badge { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; }
+.badge.green { background: var(--green-dim); color: var(--green); }
+.badge.amber { background: rgba(251,191,36,0.1); color: var(--amber); }
+.badge.red { background: var(--red-dim); color: var(--red); }
+
+/* PERSONA PAGE */
+.personas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.persona-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem; cursor: pointer;
+  transition: all .2s;
+}
+.persona-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.persona-card.active { border-color: var(--gold); background: var(--gold-dim); }
+.persona-initial {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+  margin-bottom: 10px;
+}
+.persona-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.persona-tag { font-size: 11px; color: var(--muted); }
+.persona-fit-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.persona-fit-label { font-size: 10px; color: var(--muted); font-family: var(--font-mono); width: 70px; }
+.persona-fit-bg { flex: 1; height: 3px; background: var(--faint); border-radius: 2px; }
+.persona-fit-fill { height: 100%; border-radius: 2px; }
+
+.persona-detail {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 1.5rem; margin-top: 1.5rem;
+  display: none;
+}
+.persona-detail.show { display: block; animation: fadeIn .3s ease; }
+.pd-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+.pd-avatar {
+  width: 56px; height: 56px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 1.2rem;
+}
+.pd-name { font-family: var(--font-display); font-size: 1.6rem; color: var(--text); }
+.pd-sub { font-size: 13px; color: var(--muted); }
+.pd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1rem; }
+.pd-section-title { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
+.pd-list { list-style: none; }
+.pd-list li { font-size: 13px; color: var(--text); padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.pd-list li:last-child { border-bottom: none; }
+.pd-list li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 3px; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .uw-layout { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .personas-grid { grid-template-columns: 1fr 1fr; }
+  .st-grid { grid-template-columns: 1fr; }
+  .inputs-grid { grid-template-columns: 1fr; }
+  .pd-grid { grid-template-columns: 1fr; }
+  nav { padding: 0 1rem; }
+  .nav-tabs { gap: 0; }
+  .nav-tab { padding: 6px 10px; font-size: 12px; }
+}
+
+.tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.tag { font-size: 10px; font-family: var(--font-mono); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">RE</div>
+    <span class="nav-title">Champaign Risk</span>
+    <span class="nav-sub">· by Champaign Homes</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('home')">Overview</button>
+    <button class="nav-tab" onclick="showPage('quiz')">Investor Quiz</button>
+    <button class="nav-tab" onclick="showPage('underwriter')">Underwriter</button>
+    <button class="nav-tab" onclick="showPage('stress')">Stress Test</button>
+    <button class="nav-tab" onclick="showPage('personas')">Personas</button>
+  </div>
+  <div class="nav-badge">Champaign County · IL</div>
+</nav>
+
+<main>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-orb"></div>
+    <div class="hero-eyebrow">Champaign County · Illinois · Real Estate Intelligence</div>
+    <h1 class="hero-h1">Know the <em>real risk</em> before you write the check</h1>
+    <p class="hero-p">A professional risk assessment platform built for Champaign County investors. Identify your investor type, underwrite any property, and stress-test your returns — all in one place.</p>
+    <div class="hero-cta-row">
+      <button class="btn-primary" onclick="showPage('quiz')">Find my investor type</button>
+      <button class="btn-outline" onclick="showPage('underwriter')">Underwrite a property</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">8</div>
+        <div class="hero-stat-lbl">Investor personas</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">12+</div>
+        <div class="hero-stat-lbl">Risk factors scored</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">28+</div>
+        <div class="hero-stat-lbl">KPIs tracked</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">Live</div>
+        <div class="hero-stat-lbl">Champaign market data</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURE CARDS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">Platform features</div>
+      <div class="section-title">Everything your clients need to invest with confidence</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+      <div class="card" style="cursor:pointer;" onclick="showPage('quiz')">
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--gold-dim);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Investor Quiz</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">6 smart questions identify your client's investor type and generate a tailored risk input checklist.</div>
+        <div style="margin-top:12px;font-size:11px;color:var(--gold);font-family:var(--font-mono);">Take quiz →</div>
+      </div>
+      <div class="card" style="cursor:pointer;" onclick="showPage('underwriter')">
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--teal-dim);border:1px solid rgba(45,212,191,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        </div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Property Underwriter</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">Enter any Champaign County property and get an instant risk score, cash flow model, and cap rate analysis.</div>
+        <div style="margin-top:12px;font-size:11px;color:var(--teal);font-family:var(--font-mono);">Underwrite now →</div>
+      </div>
+      <div class="card" style="cursor:pointer;" onclick="showPage('stress')">
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--red-dim);border:1px solid rgba(248,113,113,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;">Stress Test</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">Model vacancy spikes, rent drops, and rate changes. Know exactly where your deal breaks even.</div>
+        <div style="margin-top:12px;font-size:11px;color:var(--red);font-family:var(--font-mono);">Run scenarios →</div>
+      </div>
+    </div>
+
+    <!-- SAMPLE PROPERTY CALLOUT -->
+    <div style="margin-top:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;">
+      <div style="flex:1;min-width:280px;">
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Sample analysis · Live property</div>
+        <div style="font-size:18px;font-weight:600;color:var(--text);">1305 Brian Pl #3 — Urbana, IL</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:3px;">2 bed · 1 bath · 900 sq ft · Built 1983 · $88,000</div>
+        <div class="tag-row">
+          <span class="tag">7.2% cap rate</span>
+          <span class="tag">1.18 DSCR</span>
+          <span class="tag">UIUC-adjacent</span>
+          <span class="tag">HOA incl.</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-display);font-size:2rem;color:var(--gold);">62</div>
+          <div style="font-size:10px;color:var(--muted);font-family:var(--font-mono);">RISK SCORE</div>
+          <div style="font-size:10px;color:var(--amber);">Moderate</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-display);font-size:2rem;color:var(--green);">+$117</div>
+          <div style="font-size:10px;color:var(--muted);font-family:var(--font-mono);">NET CF/MO</div>
+          <div style="font-size:10px;color:var(--green);">Base case</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-display);font-size:2rem;color:var(--teal);">8.4%</div>
+          <div style="font-size:10px;color:var(--muted);font-family:var(--font-mono);">CoC RETURN</div>
+          <div style="font-size:10px;color:var(--teal);">20% down</div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="showPage('underwriter')">View full analysis</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ PAGE -->
+<div class="page" id="page-quiz">
+  <div class="quiz-wrap" id="quiz-container"></div>
+</div>
+
+<!-- UNDERWRITER PAGE -->
+<div class="page" id="page-underwriter">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">Property underwriter</div>
+      <div class="section-title">Cash flow & risk analysis</div>
+      <div class="section-sub">Pre-loaded with 1305 Brian Pl #3 — adjust any input to update in real time</div>
+    </div>
+
+    <div class="uw-layout">
+      <!-- INPUTS -->
+      <div>
+        <div class="card">
+          <div style="font-size:11px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:1rem;">Property inputs</div>
+
+          <div class="input-block">
+            <label>Purchase price ($)</label>
+            <input type="number" id="u-price" value="88000" oninput="updateUW()">
+          </div>
+          <div class="input-block">
+            <label>Monthly rent ($)</label>
+            <input type="number" id="u-rent" value="975" oninput="updateUW()">
+          </div>
+          <div class="input-block">
+            <label>HOA / month ($)</label>
+            <input type="number" id="u-hoa" value="250" oninput="updateUW()">
+          </div>
+
+          <div class="slider-block">
+            <label>Down payment <span id="u-down-out">20%</span></label>
+            <input type="range" id="u-down" min="10" max="40" step="1" value="20" oninput="updateUW()">
+          </div>
+          <div class="slider-block">
+            <label>Interest rate <span id="u-rate-out">7.0%</span></label>
+            <input type="range" id="u-rate" min="4" max="12" step="0.25" value="7" oninput="updateUW()">
+          </div>
+          <div class="slider-block">
+            <label>Vacancy rate <span id="u-vac-out">5%</span></label>
+            <input type="range" id="u-vac" min="0" max="30" step="1" value="5" oninput="updateUW()">
+          </div>
+          <div class="slider-block">
+            <label>Mgmt fee <span id="u-mgmt-out">10%</span></label>
+            <input type="range" id="u-mgmt" min="0" max="15" step="1" value="10" oninput="updateUW()">
+          </div>
+          <div class="slider-block">
+            <label>Capex reserve / mo <span id="u-capex-out">$50</span></label>
+            <input type="range" id="u-capex" min="0" max="200" step="10" value="50" oninput="updateUW()">
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div>
+        <!-- RISK METER -->
+        <div class="risk-meter">
+          <div class="risk-score-big" id="u-risk-score" style="color:var(--amber);">62</div>
+          <div style="flex:1;">
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Composite risk score</div>
+            <div style="height:6px;background:var(--faint);border-radius:3px;overflow:hidden;">
+              <div id="u-risk-bar" style="height:100%;width:62%;background:var(--amber);border-radius:3px;transition:width .4s;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--muted);font-family:var(--font-mono);">
+              <span>Low risk</span><span>High risk</span>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div id="u-risk-label" style="font-size:13px;font-weight:600;color:var(--amber);">Moderate</div>
+            <div style="font-size:10px;color:var(--muted);">Overall rating</div>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi" id="kpi-cf"><div class="kpi-label">Net CF / mo</div><div class="kpi-val" id="kv-cf">—</div><div class="kpi-sub">After all costs</div></div>
+          <div class="kpi" id="kpi-coc"><div class="kpi-label">CoC return</div><div class="kpi-val" id="kv-coc">—</div><div class="kpi-sub">Annual</div></div>
+          <div class="kpi" id="kpi-cap"><div class="kpi-label">Cap rate</div><div class="kpi-val" id="kv-cap">—</div><div class="kpi-sub">NOI / price</div></div>
+          <div class="kpi" id="kpi-dscr"><div class="kpi-label">DSCR</div><div class="kpi-val" id="kv-dscr">—</div><div class="kpi-sub">Min 1.0 safe</div></div>
+          <div class="kpi" id="kpi-yield"><div class="kpi-label">Gross yield</div><div class="kpi-val" id="kv-yield">—</div><div class="kpi-sub">Rent / price</div></div>
+          <div class="kpi neutral"><div class="kpi-label">P&I / mo</div><div class="kpi-val" id="kv-pi">—</div><div class="kpi-sub">30yr fixed</div></div>
+        </div>
+
+        <!-- WATERFALL CHART -->
+        <div class="card" style="padding:1rem;">
+          <div style="font-size:11px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem;">Monthly cash flow waterfall</div>
+          <div class="chart-wrap">
+            <canvas id="wfChart" role="img" aria-label="Waterfall chart showing monthly cash flow breakdown">Cash flow waterfall chart</canvas>
+          </div>
+        </div>
+
+        <!-- VERDICT -->
+        <div id="u-verdict" class="verdict-box" style="margin-top:1rem;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STRESS TEST PAGE -->
+<div class="page" id="page-stress">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">Stress test simulator</div>
+      <div class="section-title">Model the downside</div>
+      <div class="section-sub">Drag sliders to stress-test 1305 Brian Pl. See instant impact on cash flow and returns.</div>
+    </div>
+
+    <div class="st-grid">
+      <!-- CONTROLS -->
+      <div>
+        <div class="card">
+          <div style="font-size:11px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:1.25rem;">Stress variables</div>
+          <div class="slider-block">
+            <label>Vacancy rate <span id="s-vac-out">5%</span></label>
+            <input type="range" id="s-vac" min="0" max="30" step="1" value="5" oninput="updateStress()">
+          </div>
+          <div class="slider-block">
+            <label>Monthly rent <span id="s-rent-out">$975</span></label>
+            <input type="range" id="s-rent" min="600" max="1300" step="25" value="975" oninput="updateStress()">
+          </div>
+          <div class="slider-block">
+            <label>Capex reserve / mo <span id="s-capex-out">$50</span></label>
+            <input type="range" id="s-capex" min="0" max="250" step="10" value="50" oninput="updateStress()">
+          </div>
+          <div class="slider-block">
+            <label>Interest rate <span id="s-rate-out">7.0%</span></label>
+            <input type="range" id="s-rate" min="4" max="12" step="0.25" value="7" oninput="updateStress()">
+          </div>
+          <div class="divider"></div>
+          <div style="font-size:11px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:1rem;">Live output</div>
+          <div class="kpi-grid" style="grid-template-columns:1fr 1fr;">
+            <div class="kpi" id="s-kpi-cf"><div class="kpi-label">Net CF / mo</div><div class="kpi-val" id="s-kv-cf">—</div></div>
+            <div class="kpi" id="s-kpi-coc"><div class="kpi-label">CoC return</div><div class="kpi-val" id="s-kv-coc">—</div></div>
+            <div class="kpi" id="s-kpi-dscr"><div class="kpi-label">DSCR</div><div class="kpi-val" id="s-kv-dscr">—</div></div>
+            <div class="kpi" id="s-kpi-cap"><div class="kpi-label">Cap rate</div><div class="kpi-val" id="s-kv-cap">—</div></div>
+          </div>
+          <div id="s-verdict" class="verdict-box" style="margin-top:1rem;font-size:12px;"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div>
+        <!-- CHART -->
+        <div class="card" style="padding:1rem;margin-bottom:1rem;">
+          <div style="font-size:11px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem;">Cash flow waterfall</div>
+          <div class="chart-wrap">
+            <canvas id="stChart" role="img" aria-label="Stress test cash flow waterfall chart">Stress test waterfall chart</canvas>
+          </div>
+        </div>
+
+        <!-- SCENARIO TABLE -->
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);">
+            <div style="font-size:11px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Pre-set scenarios</div>
+          </div>
+          <table class="scenario-table">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Net CF</th>
+                <th>CoC</th>
+                <th>Rating</th>
+              </tr>
+            </thead>
+            <tbody id="scenario-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PERSONAS PAGE -->
+<div class="page" id="page-personas">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">Investor personas</div>
+      <div class="section-title">8 types of Champaign County investors</div>
+      <div class="section-sub">Click any card to see the full risk input checklist and what we calculate for each type.</div>
+    </div>
+    <div class="personas-grid" id="personas-grid"></div>
+    <div class="persona-detail" id="persona-detail"></div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// NAV
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  const pageMap = { home: 0, quiz: 1, underwriter: 2, stress: 3, personas: 4 };
+  if (tabs[pageMap[id]]) tabs[pageMap[id]].classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'quiz') initQuiz();
+  if (id === 'underwriter') initUW();
+  if (id === 'stress') initStress();
+  if (id === 'personas') initPersonas();
+}
+
+// ======= QUIZ =======
+const QUESTIONS = [
+  { id: 'goal', text: 'What is your primary investment goal?', sub: 'Choose the one that resonates most with why you are investing.',
+    opts: [
+      { main: 'Monthly cash flow', hint: 'Steady rental income every month', scores: { bnh: 3, retail: 2, brrrr: 1 } },
+      { main: 'Build equity, then refinance', hint: 'Pull cash out and repeat the cycle', scores: { brrrr: 3, flip: 1 } },
+      { main: 'Quick profit from a sale', hint: 'Buy, improve, sell within 12 months', scores: { flip: 3, retail: 1 } },
+      { main: 'Portfolio scale / fund management', hint: 'Managing capital across many properties', scores: { syndicator: 3, pe: 2 } },
+    ]
+  },
+  { id: 'horizon', text: 'How long will you hold this investment?', sub: null,
+    opts: [
+      { main: 'Under 1 year', hint: 'Quick flip or assignment', scores: { flip: 3 } },
+      { main: '1–3 years', hint: 'BRRRR cycle or medium hold', scores: { brrrr: 3, retail: 1 } },
+      { main: '5–10 years', hint: 'Classic buy-and-hold', scores: { bnh: 3, retail: 2 } },
+      { main: '10+ years or indefinitely', hint: 'Long-term wealth building', scores: { bnh: 2, pe: 2, syndicator: 1 } },
+    ]
+  },
+  { id: 'budget', text: 'What is your total investment capital?', sub: 'Include down payment plus reserves.',
+    opts: [
+      { main: 'Under $30K', hint: 'Entry-level — needs low-cost market', scores: { retail: 3 } },
+      { main: '$30K – $100K', hint: 'Mid-range — Champaign-scale deals', scores: { retail: 2, bnh: 2, brrrr: 1 } },
+      { main: '$100K – $500K', hint: 'Serious investor — multiple properties', scores: { bnh: 2, brrrr: 2, flip: 2 } },
+      { main: '$500K+', hint: 'Portfolio or syndication scale', scores: { syndicator: 3, pe: 3 } },
+    ]
+  },
+  { id: 'manage', text: 'How hands-on do you want to be?', sub: null,
+    opts: [
+      { main: 'Fully passive', hint: 'Property manager handles everything', scores: { bnh: 3, retail: 1 } },
+      { main: 'Semi-active', hint: 'Self-manage, hire for big repairs', scores: { bnh: 2, retail: 2, brrrr: 1 } },
+      { main: 'Very active', hint: 'I will do rehab work and manage tenants', scores: { brrrr: 3, flip: 2 } },
+      { main: 'Executive', hint: 'I manage capital and operators, not properties', scores: { syndicator: 3, pe: 3 } },
+    ]
+  },
+  { id: 'risk', text: 'A tenant leaves unexpectedly. What happens?', sub: null,
+    opts: [
+      { main: 'No problem — I have 6+ months reserves', hint: 'I can absorb the hit comfortably', scores: { bnh: 3, pe: 2 } },
+      { main: 'Manageable — 2–3 months then I need a tenant', hint: 'Slight stress but recoverable', scores: { bnh: 1, retail: 2, brrrr: 1 } },
+      { main: 'Painful — I need to sell or refi quickly', hint: 'My cash position is tight', scores: { flip: 2, brrrr: 2 } },
+      { main: 'I report this to investors and adjust the plan', hint: 'Portfolio-level impact tracking', scores: { syndicator: 3, pe: 2 } },
+    ]
+  },
+  { id: 'exp', text: 'What is your real estate experience?', sub: null,
+    opts: [
+      { main: 'None — first investment ever', hint: 'Brand new to this', scores: { retail: 3 } },
+      { main: '1–2 properties', hint: 'Still learning the ropes', scores: { retail: 2, bnh: 1 } },
+      { main: '3–10 properties', hint: 'I know what I am doing', scores: { bnh: 2, brrrr: 2, flip: 1 } },
+      { main: '10+ or institutional background', hint: 'Deep experience', scores: { syndicator: 2, pe: 3, bnh: 1 } },
+    ]
+  }
+];
+
+const PERSONA_DATA = {
+  bnh: { name: 'Buy-and-hold landlord', short: 'B+H', tag: 'Cash flow over the long haul', color: '#c9a84c', bg: 'rgba(201,168,76,0.12)',
+    inputs: ['Purchase price', 'Monthly rent', 'HOA / month', 'Down payment %', 'Interest rate %', 'Self-manage or PM?', 'Planned hold (years)', 'Cash reserves'],
+    riskFactors: ['DSCR', 'Cash-on-cash return', 'Vacancy stress test', 'Capex reserve adequacy', 'Property tax reassessment', 'UIUC enrollment trend'],
+    fitLabel: 'Best fit for 1305 Brian Pl'
+  },
+  retail: { name: 'First-time investor', short: 'R/F', tag: 'Simple score — avoid surprises', color: '#fbbf24', bg: 'rgba(251,191,36,0.1)',
+    inputs: ['Purchase price', 'Total capital available', 'Monthly rent estimate', 'Personal monthly income', 'Other debt payments', 'Prior landlord experience?'],
+    riskFactors: ['Reserve adequacy (3-month test)', 'Capex surprise exposure', 'Rent-to-income of tenants', 'HOA coverage adequacy', 'Build year risk'],
+    fitLabel: 'Secondary fit for 1305 Brian Pl'
+  },
+  brrrr: { name: 'BRRRR investor', short: 'BRR', tag: 'Refinance timing and appraisal gap', color: '#2dd4bf', bg: 'rgba(45,212,191,0.08)',
+    inputs: ['Purchase price', 'Estimated rehab cost', 'After-repair value (ARV)', 'Target refi LTV %', 'Post-rehab monthly rent', 'Timeline to refi (months)', 'Nearby comp count'],
+    riskFactors: ['Appraisal gap risk (thin comps)', 'ARV confidence interval', 'DSCR post-refinance', 'Equity trapped risk', 'Holding cost during rehab'],
+    fitLabel: 'Marginal fit — thin Champaign comps'
+  },
+  flip: { name: 'Flipper', short: 'FLP', tag: 'Exit velocity and liquidity', color: '#f87171', bg: 'rgba(248,113,113,0.08)',
+    inputs: ['Purchase price', 'Estimated rehab cost', 'Target sale price (ARV)', 'Target hold period (months)', 'Carrying costs / month', 'Days-on-market (local avg)'],
+    riskFactors: ['Exit liquidity score', 'ARV confidence (thin comps)', 'Carrying cost bleed risk', 'Rehab overrun probability', 'Net margin after all costs'],
+    fitLabel: 'Poor fit for 1305 Brian Pl'
+  },
+  syndicator: { name: 'Syndicator', short: 'SYN', tag: 'LP narrative and portfolio risk', color: '#a78bfa', bg: 'rgba(167,139,250,0.08)',
+    inputs: ['Total raise amount', 'Number of LP investors', 'Target property count', 'Target markets', 'Preferred return to LPs %', 'GP / LP split'],
+    riskFactors: ['Portfolio concentration by market', 'Employer HHI at ZIP level', 'LP return waterfall stress', 'Regulatory risk across markets', 'Exit timing vs. fund horizon'],
+    fitLabel: 'Not applicable to single-family'
+  },
+  pe: { name: 'Private equity', short: 'PE', tag: 'Macro allocation and regulatory risk', color: '#94a3b8', bg: 'rgba(148,163,184,0.08)',
+    inputs: ['Portfolio target ($M)', 'Target markets', 'Asset class focus', 'Target cap rate floor %', 'Max employer concentration', 'Hold period (years)'],
+    riskFactors: ['Metro-level cap rate benchmarks', 'Employer concentration (HHI)', 'Regulatory / eviction law map', 'Supply pipeline by submarket', 'Portfolio exit liquidity score'],
+    fitLabel: 'Not applicable to single-family'
+  },
+  lender: { name: 'Lender / credit analyst', short: 'LND', tag: 'Collateral quality and DSCR', color: '#38bdf8', bg: 'rgba(56,189,248,0.08)',
+    inputs: ['Loan amount', 'Property value (appraised)', 'Borrower income', 'Existing debt service', 'LTV ratio target', 'Loan term (years)'],
+    riskFactors: ['LTV ratio', 'DSCR (debt service coverage)', 'Collateral liquidation risk', 'Comp depth for appraisal', 'Borrower credit profile'],
+    fitLabel: 'Underwriting the deal, not owning it'
+  },
+  developer: { name: 'Developer', short: 'DEV', tag: 'Land basis, entitlement, supply pipeline', color: '#34d399', bg: 'rgba(52,211,153,0.08)',
+    inputs: ['Land / site cost', 'Construction cost estimate', 'Target delivery date', 'Pre-lease rate target %', 'Entitlement timeline (months)', 'Exit: sell or hold?'],
+    riskFactors: ['Permit / entitlement risk', 'Construction cost overrun', 'Absorption / lease-up risk', 'Supply pipeline competing projects', 'Zoning / regulatory exposure'],
+    fitLabel: 'No development upside here'
+  }
+};
+
+let qAnswers = {}, qCurrent = 0, qPhase = 'quiz';
+
+function initQuiz() {
+  qAnswers = {}; qCurrent = 0; qPhase = 'quiz';
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (qPhase === 'result') { renderResult(c); return; }
+  const q = QUESTIONS[qCurrent];
+  const pct = Math.round(qCurrent / QUESTIONS.length * 100);
+  const sel = qAnswers[q.id];
+  c.innerHTML = `
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="q-number">Question ${qCurrent + 1} of ${QUESTIONS.length}</div>
+    <div class="q-text">${q.text}</div>
+    ${q.sub ? `<div class="q-sub">${q.sub}</div>` : '<div style="margin-bottom:1.75rem;"></div>'}
+    ${q.opts.map((o, i) => `
+      <div class="q-opt${sel === i ? ' sel' : ''}" onclick="selectOpt(${i})">
+        <div class="opt-key">${'ABCD'[i]}</div>
+        <div class="opt-body"><div class="opt-main">${o.main}</div><div class="opt-hint">${o.hint}</div></div>
+      </div>
+    `).join('')}
+    <div class="q-nav">
+      <button class="btn-ghost" onclick="qBack()" ${qCurrent === 0 ? 'disabled' : ''}>← Back</button>
+      <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);">${qCurrent + 1} / ${QUESTIONS.length}</span>
+      <button class="btn-gold" onclick="qNext()" ${sel === undefined ? 'disabled' : ''}>${qCurrent === QUESTIONS.length - 1 ? 'See my profile →' : 'Next →'}</button>
+    </div>
+  `;
+}
+
+function selectOpt(i) {
+  qAnswers[QUESTIONS[qCurrent].id] = i;
+  renderQuiz();
+}
+function qBack() { if (qCurrent > 0) { qCurrent--; renderQuiz(); } }
+function qNext() {
+  if (qCurrent < QUESTIONS.length - 1) { qCurrent++; renderQuiz(); }
+  else { qPhase = 'result'; renderQuiz(); }
+}
+
+function calcScores() {
+  const s = {};
+  Object.keys(PERSONA_DATA).forEach(k => s[k] = 0);
+  QUESTIONS.forEach(q => {
+    const i = qAnswers[q.id];
+    if (i !== undefined) {
+      Object.entries(q.opts[i].scores || {}).forEach(([k, v]) => { s[k] = (s[k] || 0) + v; });
+    }
+  });
+  return s;
+}
+
+function renderResult(c) {
+  const scores = calcScores();
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const maxScore = sorted[0][1];
+  const top2 = sorted.slice(0, 2).map(e => e[0]);
+
+  function pCard(key, primary) {
+    const p = PERSONA_DATA[key];
+    const pct = maxScore > 0 ? Math.round(scores[key] / maxScore * 100) : 0;
+    return `
+      <div style="background:var(--surface);border:${primary ? '2px solid var(--gold)' : '1px solid var(--border)'};border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;">
+        ${primary ? `<div style="font-family:var(--font-mono);font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Best match</div>` : `<div style="font-family:var(--font-mono);font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Secondary match</div>`}
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+          <div style="width:56px;height:56px;border-radius:14px;background:${p.bg};border:1px solid ${p.color}40;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:12px;font-weight:500;color:${p.color};flex-shrink:0;">${p.short}</div>
+          <div style="flex:1;">
+            <div style="font-family:var(--font-display);font-size:1.4rem;color:var(--text);">${p.name}</div>
+            <div style="font-size:12px;color:var(--muted);">${p.tag}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:var(--font-display);font-size:2rem;color:${p.color};">${pct}%</div>
+            <div style="font-size:10px;color:var(--muted);">match</div>
+          </div>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Inputs we'll collect</div>
+        <div class="inputs-grid" style="grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;">
+          ${p.inputs.map(inp => `
+            <div><label style="font-size:10px;color:var(--muted);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px;">${inp}</label>
+            <input type="text" placeholder="Enter value…" style="width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:7px 10px;color:var(--text);font-size:12px;font-family:var(--font-body);outline:none;"></div>
+          `).join('')}
+        </div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Risk factors calculated</div>
+        <div class="chips">${p.riskFactors.map(r => `<span class="chip">${r}</span>`).join('')}</div>
+        <div style="margin-top:10px;font-size:11px;padding:6px 12px;border-radius:6px;background:${p.bg};color:${p.color};display:inline-block;border:1px solid ${p.color}30;">${p.fitLabel}</div>
+      </div>
+    `;
+  }
+
+  c.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Quiz complete</div>
+        <div style="font-family:var(--font-display);font-size:1.8rem;color:var(--text);">Your investor profile</div>
+      </div>
+      <button class="btn-ghost" onclick="initQuiz()">Retake quiz</button>
+    </div>
+    ${pCard(top2[0], true)}
+    ${pCard(top2[1], false)}
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-top:4px;">
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">All persona scores</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        ${sorted.map(([k]) => {
+          const p = PERSONA_DATA[k];
+          const pct = maxScore > 0 ? Math.round(scores[k] / maxScore * 100) : 0;
+          return `<span style="font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;background:${k === top2[0] ? p.bg : 'var(--surface2)'};color:${k === top2[0] ? p.color : 'var(--muted)'};border:1px solid var(--border);">${p.name.split(' ')[0]} — ${pct}%</span>`;
+        }).join('')}
+      </div>
+    </div>
+    <div style="margin-top:1.25rem;display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn-primary" onclick="showPage('underwriter')">Underwrite a property →</button>
+      <button class="btn-outline" onclick="showPage('stress')">Run stress test →</button>
+    </div>
+  `;
+}
+
+// ======= UNDERWRITER =======
+let wfChart;
+
+function calcUW() {
+  const price = +document.getElementById('u-price').value || 88000;
+  const rent = +document.getElementById('u-rent').value || 975;
+  const hoa = +document.getElementById('u-hoa').value || 250;
+  const downPct = +document.getElementById('u-down').value / 100;
+  const rate = +document.getElementById('u-rate').value / 100;
+  const vacPct = +document.getElementById('u-vac').value / 100;
+  const mgmtPct = +document.getElementById('u-mgmt').value / 100;
+  const capex = +document.getElementById('u-capex').value;
+
+  const down = price * downPct;
+  const loan = price - down;
+  const mr = rate / 12;
+  const pi = loan * (mr * Math.pow(1 + mr, 360)) / (Math.pow(1 + mr, 360) - 1);
+  const effRent = rent * (1 - vacPct);
+  const mgmt = effRent * mgmtPct;
+  const noi = effRent - hoa - mgmt - capex;
+  const netCF = noi - pi;
+  const coc = (netCF * 12) / down * 100;
+  const capRate = (noi * 12) / price * 100;
+  const dscr = noi / pi;
+  const grossYield = (rent * 12) / price * 100;
+  return { price, rent, hoa, down, loan, pi, effRent, mgmt, noi, netCF, coc, capRate, dscr, grossYield, vacLoss: rent - effRent, capex };
+}
+
+function kpiClass(val, good, bad) {
+  if (val >= good) return 'good';
+  if (val <= bad) return 'bad';
+  return 'warn';
+}
+
+function updateUW() {
+  document.getElementById('u-down-out').textContent = document.getElementById('u-down').value + '%';
+  document.getElementById('u-rate-out').textContent = parseFloat(document.getElementById('u-rate').value).toFixed(2) + '%';
+  document.getElementById('u-vac-out').textContent = document.getElementById('u-vac').value + '%';
+  document.getElementById('u-mgmt-out').textContent = document.getElementById('u-mgmt').value + '%';
+  document.getElementById('u-capex-out').textContent = '$' + document.getElementById('u-capex').value;
+
+  const d = calcUW();
+  document.getElementById('kv-cf').textContent = (d.netCF >= 0 ? '+$' : '-$') + Math.abs(Math.round(d.netCF));
+  document.getElementById('kv-coc').textContent = d.coc.toFixed(1) + '%';
+  document.getElementById('kv-cap').textContent = d.capRate.toFixed(1) + '%';
+  document.getElementById('kv-dscr').textContent = d.dscr.toFixed(2);
+  document.getElementById('kv-yield').textContent = d.grossYield.toFixed(1) + '%';
+  document.getElementById('kv-pi').textContent = '$' + Math.round(d.pi);
+
+  document.getElementById('kpi-cf').className = 'kpi ' + kpiClass(d.netCF, 50, -1);
+  document.getElementById('kpi-coc').className = 'kpi ' + kpiClass(d.coc, 6, 0);
+  document.getElementById('kpi-cap').className = 'kpi ' + kpiClass(d.capRate, 6, 4);
+  document.getElementById('kpi-dscr').className = 'kpi ' + kpiClass(d.dscr, 1.2, 0.99);
+  document.getElementById('kpi-yield').className = 'kpi gold';
+
+  // Risk score
+  let risk = 50;
+  if (d.dscr < 1) risk += 20; else if (d.dscr > 1.3) risk -= 10;
+  if (d.coc < 0) risk += 15; else if (d.coc > 8) risk -= 8;
+  if (d.capRate < 5) risk += 10; else if (d.capRate > 7) risk -= 5;
+  risk = Math.min(95, Math.max(15, Math.round(risk)));
+  const riskColor = risk < 40 ? 'var(--green)' : risk < 65 ? 'var(--amber)' : 'var(--red)';
+  const riskLabel = risk < 40 ? 'Low risk' : risk < 65 ? 'Moderate' : 'High risk';
+  document.getElementById('u-risk-score').textContent = risk;
+  document.getElementById('u-risk-score').style.color = riskColor;
+  document.getElementById('u-risk-bar').style.width = risk + '%';
+  document.getElementById('u-risk-bar').style.background = riskColor;
+  document.getElementById('u-risk-label').textContent = riskLabel;
+  document.getElementById('u-risk-label').style.color = riskColor;
+
+  // Verdict
+  const vEl = document.getElementById('u-verdict');
+  if (d.netCF >= 50 && d.dscr >= 1.15) {
+    vEl.className = 'verdict-box'; vEl.textContent = `Strong buy-and-hold profile. Net CF of $${Math.round(d.netCF)}/mo with DSCR ${d.dscr.toFixed(2)} — deal is resilient to moderate vacancy and rent stress.`;
+  } else if (d.netCF >= 0) {
+    vEl.className = 'verdict-box warn'; vEl.textContent = `Marginal — deal works in the base case (net CF +$${Math.round(d.netCF)}/mo) but a 10–15% vacancy spike turns it negative. Confirm reserve position before proceeding.`;
+  } else {
+    vEl.className = 'verdict-box bad'; vEl.textContent = `Negative cash flow at current inputs (-$${Math.abs(Math.round(d.netCF))}/mo). Needs higher rent, lower price, or larger down payment to pencil.`;
+  }
+
+  // Chart
+  const labels = ['Gross rent', 'Vacancy', 'HOA', 'Mgmt', 'Capex', 'P&I', 'Net CF'];
+  const values = [d.rent, -Math.round(d.vacLoss), -d.hoa, -Math.round(d.mgmt), -d.capex, -Math.round(d.pi), Math.round(d.netCF)];
+  const colors = ['#c9a84c','#f87171','#f87171','#f87171','#f87171','#f87171', d.netCF >= 0 ? '#4ade80' : '#f87171'];
+
+  if (wfChart) {
+    wfChart.data.datasets[0].data = values;
+    wfChart.data.datasets[0].backgroundColor = colors;
+    wfChart.update('none');
+  }
+}
+
+function initUW() {
+  setTimeout(() => {
+    const ctx = document.getElementById('wfChart');
+    if (!ctx) return;
+    if (wfChart) { wfChart.destroy(); wfChart = null; }
+    wfChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Gross rent', 'Vacancy', 'HOA', 'Mgmt', 'Capex', 'P&I', 'Net CF'],
+        datasets: [{ data: [], backgroundColor: [], borderWidth: 0 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => '$' + Math.round(c.raw) + '/mo' } } },
+        scales: {
+          x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8a8f9e', font: { size: 11 }, maxRotation: 30 } },
+          y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8a8f9e', font: { size: 11 }, callback: v => '$' + Math.round(v) } }
+        }
+      }
+    });
+    updateUW();
+  }, 50);
+}
+
+// ======= STRESS TEST =======
+let stChart;
+const SCENARIOS = [
+  { label: 'Base case (5% vac, $975)', vac: 5, rent: 975, capex: 50, rate: 7 },
+  { label: 'Summer vacancy (15%, $975)', vac: 15, rent: 975, capex: 50, rate: 7 },
+  { label: 'Rent drop ($875, 5% vac)', vac: 5, rent: 875, capex: 50, rate: 7 },
+  { label: 'Combined (15% vac, $875)', vac: 15, rent: 875, capex: 50, rate: 7 },
+  { label: 'Rate hike (10%, $975)', vac: 5, rent: 975, capex: 50, rate: 10 },
+  { label: 'Worst case (20% vac, $800)', vac: 20, rent: 800, capex: 100, rate: 7 },
+];
+
+function calcStress(vac, rent, capex, rate) {
+  const price = 88000, downPct = 0.2, hoa = 250;
+  const down = price * downPct;
+  const loan = price - down;
+  const mr = (rate / 100) / 12;
+  const pi = loan * (mr * Math.pow(1 + mr, 360)) / (Math.pow(1 + mr, 360) - 1);
+  const effRent = rent * (1 - vac / 100);
+  const mgmt = effRent * 0.10;
+  const noi = effRent - hoa - mgmt - capex;
+  const netCF = noi - pi;
+  const coc = (netCF * 12) / down * 100;
+  const capRate = (noi * 12) / price * 100;
+  const dscr = noi / pi;
+  return { netCF, coc, capRate, dscr, pi, effRent, mgmt, vacLoss: rent - effRent, rent, hoa, capex };
+}
+
+function updateStress() {
+  const vac = +document.getElementById('s-vac').value;
+  const rent = +document.getElementById('s-rent').value;
+  const capex = +document.getElementById('s-capex').value;
+  const rate = +document.getElementById('s-rate').value;
+  document.getElementById('s-vac-out').textContent = vac + '%';
+  document.getElementById('s-rent-out').textContent = '$' + rent;
+  document.getElementById('s-capex-out').textContent = '$' + capex;
+  document.getElementById('s-rate-out').textContent = parseFloat(rate).toFixed(2) + '%';
+
+  const d = calcStress(vac, rent, capex, rate);
+  document.getElementById('s-kv-cf').textContent = (d.netCF >= 0 ? '+$' : '-$') + Math.abs(Math.round(d.netCF));
+  document.getElementById('s-kv-coc').textContent = d.coc.toFixed(1) + '%';
+  document.getElementById('s-kv-dscr').textContent = d.dscr.toFixed(2);
+  document.getElementById('s-kv-cap').textContent = d.capRate.toFixed(1) + '%';
+  document.getElementById('s-kpi-cf').className = 'kpi ' + kpiClass(d.netCF, 50, -1);
+  document.getElementById('s-kpi-coc').className = 'kpi ' + kpiClass(d.coc, 6, 0);
+  document.getElementById('s-kpi-dscr').className = 'kpi ' + kpiClass(d.dscr, 1.2, 0.99);
+  document.getElementById('s-kpi-cap').className = 'kpi ' + kpiClass(d.capRate, 6, 4);
+
+  const vEl = document.getElementById('s-verdict');
+  if (d.netCF >= 0 && d.dscr >= 1) { vEl.className = 'verdict-box'; vEl.textContent = `Deal holds at these stress levels. Net CF +$${Math.round(d.netCF)}/mo — DSCR ${d.dscr.toFixed(2)} stays above 1.0.`; }
+  else if (d.netCF >= -100) { vEl.className = 'verdict-box warn'; vEl.textContent = `Near break-even (-$${Math.abs(Math.round(d.netCF))}/mo). Manageable with adequate reserves but not ideal long-term.`; }
+  else { vEl.className = 'verdict-box bad'; vEl.textContent = `Deal breaks under this stress (-$${Math.abs(Math.round(d.netCF))}/mo). Investor needs $${Math.abs(Math.round(d.netCF * 6))}+ reserves to weather 6 months.`; }
+
+  const values = [d.rent, -Math.round(d.vacLoss), -d.hoa, -Math.round(d.mgmt), -d.capex, -Math.round(d.pi), Math.round(d.netCF)];
+  const colors = ['#c9a84c','#f87171','#f87171','#f87171','#f87171','#f87171', d.netCF >= 0 ? '#4ade80' : '#f87171'];
+  if (stChart) { stChart.data.datasets[0].data = values; stChart.data.datasets[0].backgroundColor = colors; stChart.update('none'); }
+
+  // Scenario table
+  const tbody = document.getElementById('scenario-tbody');
+  tbody.innerHTML = SCENARIOS.map(s => {
+    const r = calcStress(s.vac, s.rent, s.capex, s.rate);
+    const cfStr = (r.netCF >= 0 ? '+$' : '-$') + Math.abs(Math.round(r.netCF));
+    const badgeCls = r.coc >= 6 ? 'green' : r.coc >= 0 ? 'amber' : 'red';
+    const verdict = r.coc >= 6 ? 'Solid' : r.coc >= 0 ? 'Marginal' : 'Negative';
+    return `<tr>
+      <td style="color:var(--text);font-size:12px;">${s.label}</td>
+      <td style="font-family:var(--font-mono);font-size:12px;color:${r.netCF >= 0 ? 'var(--green)' : 'var(--red)'};">${cfStr}</td>
+      <td style="font-family:var(--font-mono);font-size:12px;color:${r.coc >= 6 ? 'var(--green)' : r.coc >= 0 ? 'var(--amber)' : 'var(--red)'};">${r.coc.toFixed(1)}%</td>
+      <td><span class="badge ${badgeCls}">${verdict}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function initStress() {
+  setTimeout(() => {
+    const ctx = document.getElementById('stChart');
+    if (!ctx) return;
+    if (stChart) { stChart.destroy(); stChart = null; }
+    stChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Gross rent', 'Vacancy', 'HOA', 'Mgmt', 'Capex', 'P&I', 'Net CF'],
+        datasets: [{ data: [], backgroundColor: [], borderWidth: 0 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => '$' + Math.round(c.raw) + '/mo' } } },
+        scales: {
+          x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8a8f9e', font: { size: 11 }, maxRotation: 30 } },
+          y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8a8f9e', font: { size: 11 }, callback: v => '$' + Math.round(v) } }
+        }
+      }
+    });
+    updateStress();
+  }, 50);
+}
+
+// ======= PERSONAS =======
+const PERSONA_ORDER = ['bnh','retail','brrrr','flip','syndicator','pe','lender','developer'];
+const PERSONA_FIT = { bnh: 88, retail: 64, brrrr: 40, flip: 18, syndicator: 12, pe: 8, lender: 35, developer: 5 };
+let activePersona = null;
+
+function initPersonas() {
+  const grid = document.getElementById('personas-grid');
+  grid.innerHTML = PERSONA_ORDER.map(key => {
+    const p = PERSONA_DATA[key];
+    const fit = PERSONA_FIT[key];
+    const fitColor = fit >= 60 ? '#4ade80' : fit >= 30 ? '#fbbf24' : '#f87171';
+    return `
+      <div class="persona-card${activePersona === key ? ' active' : ''}" onclick="selectPersona('${key}')">
+        <div class="persona-initial" style="background:${p.bg};border:1px solid ${p.color}40;color:${p.color};">${p.short}</div>
+        <div class="persona-name">${p.name}</div>
+        <div class="persona-tag">${p.tag}</div>
+        <div class="persona-fit-row">
+          <div class="persona-fit-label">Property fit</div>
+          <div class="persona-fit-bg"><div class="persona-fit-fill" style="width:${fit}%;background:${fitColor};"></div></div>
+          <div style="font-size:10px;font-family:var(--font-mono);color:${fitColor};min-width:28px;text-align:right;">${fit}%</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  if (activePersona) showPersonaDetail(activePersona);
+}
+
+function selectPersona(key) {
+  activePersona = activePersona === key ? null : key;
+  initPersonas();
+}
+
+function showPersonaDetail(key) {
+  const p = PERSONA_DATA[key];
+  const d = document.getElementById('persona-detail');
+  d.className = 'persona-detail show';
+  d.innerHTML = `
+    <div class="pd-header">
+      <div class="pd-avatar" style="background:${p.bg};border:1px solid ${p.color}40;color:${p.color};">${p.short}</div>
+      <div>
+        <div class="pd-name">${p.name}</div>
+        <div class="pd-sub">${p.tag}</div>
+      </div>
+      <div style="margin-left:auto;text-align:right;">
+        <div style="font-family:var(--font-display);font-size:2rem;color:${p.color};">${PERSONA_FIT[key]}%</div>
+        <div style="font-size:10px;color:var(--muted);">property fit</div>
+      </div>
+    </div>
+    <div style="font-size:12px;padding:8px 14px;border-radius:6px;background:${p.bg};color:${p.color};display:inline-block;border:1px solid ${p.color}30;margin-bottom:1.25rem;">${p.fitLabel}</div>
+    <div class="pd-grid">
+      <div>
+        <div class="pd-section-title">Inputs to collect</div>
+        <ul class="pd-list">
+          ${p.inputs.map(i => `<li>${i}</li>`).join('')}
+        </ul>
+      </div>
+      <div>
+        <div class="pd-section-title">Risk factors we calculate</div>
+        <ul class="pd-list">
+          ${p.riskFactors.map(r => `<li>${r}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:1.25rem;display:flex;gap:10px;">
+      <button class="btn-gold" onclick="showPage('quiz')">Take the investor quiz →</button>
+      <button class="btn-ghost" onclick="showPage('underwriter')">Underwrite a property →</button>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
